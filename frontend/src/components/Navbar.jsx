@@ -2,7 +2,7 @@ import { Link, NavLink } from "react-router-dom";
 
 const Navbar = () => {
     return (
-        <div className="min-h-screen">   
+        <div className="sticky top-0 z-50">   
         <div className="navbar bg-base-100 border border-base-300 hover:bg-base-200">
             {/* Logo Section */}
             <div className="flex-1">
@@ -30,7 +30,7 @@ const Navbar = () => {
                     </li>
                     <li>
                         <NavLink 
-                            to="/myRoster" 
+                            to="/roster" 
                             className={({ isActive }) => isActive ? "text-primary font-bold" : ""}
                         >
                             My Roster
