@@ -29,14 +29,14 @@ const Leaderboard = () => {
     setError("");
     setSuccess("");
 
-    if (!username || !score || isNaN(score) || score < 0) {
+    if (!username.trim() || !score || isNaN(score) || score < 0) {
       setError("Please enter a valid name and a positive score.");
       return;
     }
 
     try {
       await axios.post("http://localhost:3000/leaderboard", {
-        username,
+        username: username.trim(),
         score: parseInt(score),
       });
       setSuccess("Score successfully submitted!");
@@ -66,14 +66,11 @@ const Leaderboard = () => {
           </tr>
         </thead>
         <tbody>
-          {leaderboard.map((player) => (
+          {leaderboard.map((player, index) => (
             <tr key={player.id || player._id} className="text-center">
-              <td className="border border-gray-300 px-4 py-2">
-                {player.username}
-              </td>
-              <td className="border border-gray-300 px-4 py-2">
-                {player.score}
-              </td>
+              <td className="border border-gray-300 px-4 py-2">{index + 1}</td>
+              <td className="border border-gray-300 px-4 py-2">{player.username}</td>
+              <td className="border border-gray-300 px-4 py-2">{player.score}</td>
             </tr>
           ))}
         </tbody>
