@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const rosterSchema = new mongoose.Schema({
   id: { type: Number, required: true, unique: true },
@@ -6,4 +6,6 @@ const rosterSchema = new mongoose.Schema({
   sprite: { type: String, required: true },
 });
 
-module.exports = mongoose.model('Roster', rosterSchema);
+const Roster = mongoose.model('Roster', rosterSchema);
+
+export default Roster;
