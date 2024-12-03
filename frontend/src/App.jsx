@@ -1,4 +1,6 @@
-import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Homepage from './pages/Homepage';
+import PokemonDetails from './pages/PokemonDetails';
 import Layout from './components/Layout'
 
 function App() {
@@ -10,8 +12,13 @@ function App() {
   )
   
   return (
-    <RouterProvider router={router} />
-  )
+    <Router>
+      <Routes>
+        <Route path="/" element={<Homepage />} />
+        <Route path="/pokemon/:id" element={<PokemonDetails />} />
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;
