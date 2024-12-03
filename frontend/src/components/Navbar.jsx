@@ -1,13 +1,14 @@
 import { Link, NavLink } from "react-router-dom";
 
 const Navbar = () => {
-    return (
-        <div className="sticky top-0 z-50">   
-        <div className="navbar bg-base-100 border border-base-300 hover:bg-base-200">
-            {/* Logo Section */}
-            <div className="flex-1">
-                <Link className="btn btn-ghost normal-case text-xl" to="/">Pokemon Battles</Link>
-            </div>
+  return (
+    <div className="navbar bg-base-100 border border-base-300 hover:bg-base-200">
+      {/* Logo Section */}
+      <div className="flex-1">
+        <Link className="btn btn-ghost normal-case text-xl" to="/">
+          Pokemon Battles
+        </Link>
+      </div>
 
             {/* Navigation Links */}
             <div className="flex-none">
@@ -47,8 +48,7 @@ const Navbar = () => {
                 </ul>
             </div>
         </div>
-        </div>
-    );
+  ); 
 }
-
+  
 export default Navbar;

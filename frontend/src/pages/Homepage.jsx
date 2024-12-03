@@ -1,25 +1,47 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import axios from "axios";
 
 const Homepage = () => {
   const [pokemonList, setPokemonList] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchPokemonList = async () => {
+      console.log("Fetching Pokémon list...");
       try {
         const response = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=16'); // Adjust limit as needed
+        console.log("Fetched Pokémon list:", response.data.results);
         setPokemonList(response.data.results);
+        console.log("Updated Pokémon List State:", response.data.results);
       } catch (err) {
-        setError('Failed to load Pokémon. Please try again later.');
+        console.error("Error fetching Pokémon:", err);
+        setError("Failed to load Pokémon. Please try again later.");
+      } finally {
+        setLoading(false); // Ensure loading is set to false
       }
     };
 
     fetchPokemonList();
   }, []);
 
-  if (error) return <p className="text-error">{error}</p>;
+  console.log("Pokemon List:", pokemonList);
+
+  if (loading) {
+    console.log("Loading state active");
+    return <p className="text-primary text-center mt-4">Loading Pokémon...</p>;
+  }
+
+  if (error) {
+    console.log("Error state active");
+    return <p className="text-error text-center">{error}</p>;
+  }
+
+  if (!pokemonList || pokemonList.length === 0) {
+    console.log("No Pokémon to display");
+    return <p className="text-center text-primary">No Pokémon available to display.</p>;
+  }
 
   return (
     <div className="container mx-auto p-4 min-h-screen">

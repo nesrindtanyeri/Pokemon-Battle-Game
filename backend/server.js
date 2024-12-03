@@ -10,6 +10,16 @@ dotenv.config();
 
 const app = express();
 
+
+const cors = require("cors");
+
+// Allow all origins or specify the frontend's origin
+app.use(cors({
+    origin: "http://localhost:5173" // Your frontend URL
+}));
+
+
+
 // Middleware to parse JSON
 app.use(cors());
 app.use(express.json());
