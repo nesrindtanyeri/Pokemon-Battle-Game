@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const leaderboardSchema = new mongoose.Schema({
   username: {
@@ -10,6 +10,10 @@ const leaderboardSchema = new mongoose.Schema({
     type: Number,
     required: true,
     default: 0,
+    validate: {
+      validator: (value) => value >= 0,
+      message: "Score must be a non-negative number.",
+    },
   },
   date: {
     type: Date,
@@ -17,6 +21,7 @@ const leaderboardSchema = new mongoose.Schema({
   },
 });
 
-const Leaderboard = mongoose.model('Leaderboard', leaderboardSchema);
+// Add an index for optimized queries
+leaderboardSchema.index({ score: -1, date: 1 });
 
-export default Leaderboard;
+export default mongoose.model("Leaderboard", leaderboardSchema);

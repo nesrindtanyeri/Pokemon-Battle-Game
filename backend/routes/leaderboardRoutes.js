@@ -1,17 +1,19 @@
-const express = require("express");
+import express from "express";
+import Leaderboard from "../models/leaderboard.model.js";
+
+
+
 const router = express.Router();
-const Leaderboard = require("../models/leaderboard.model");
 
 // Fetch leaderboard
 router.get("/", async (req, res) => {
   try {
     const leaderboard = await Leaderboard.find().sort({ score: -1, date: 1 });
-    res.json(leaderboard.map((entry) => ({ ...entry._doc, id: entry._id }))); // Add `id` for React keys
+    res.json(leaderboard.map((entry) => ({ ...entry._doc, id: entry._id })));
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch leaderboard" });
   }
 });
-
 
 // Add new score
 router.post("/", async (req, res) => {
@@ -30,5 +32,4 @@ router.post("/", async (req, res) => {
   }
 });
 
-module.exports = router;
-
+export default router;
