@@ -54,7 +54,9 @@ const Leaderboard = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold text-center text-primary mb-6">Leaderboard</h1>
+      <h1 className="text-3xl font-bold text-center text-primary mb-6">
+        Leaderboard
+      </h1>
       <table className="table-auto w-full border-collapse border border-gray-300 mb-6">
         <thead>
           <tr className="bg-secondary text-neutral">
@@ -64,22 +66,29 @@ const Leaderboard = () => {
           </tr>
         </thead>
         <tbody>
-          {leaderboard.map((player, index) => (
-            <tr key={player.id} className="text-center">
-              <td className="border border-gray-300 px-4 py-2">{index + 1}</td>
-              <td className="border border-gray-300 px-4 py-2">{player.username}</td>
-              <td className="border border-gray-300 px-4 py-2">{player.score}</td>
+          {leaderboard.map((player) => (
+            <tr key={player.id || player._id} className="text-center">
+              <td className="border border-gray-300 px-4 py-2">
+                {player.username}
+              </td>
+              <td className="border border-gray-300 px-4 py-2">
+                {player.score}
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
 
       <form onSubmit={handleSubmit} className="bg-neutral p-4 rounded shadow">
-        <h2 className="text-xl font-bold text-primary mb-4">Submit Your Score</h2>
+        <h2 className="text-xl font-bold text-primary mb-4">
+          Submit Your Score
+        </h2>
         {error && <p className="text-error mb-2">{error}</p>}
         {success && <p className="text-success mb-2">{success}</p>}
         <div className="mb-4">
-          <label className="block text-secondary mb-1" htmlFor="username">Name:</label>
+          <label className="block text-secondary mb-1" htmlFor="username">
+            Name:
+          </label>
           <input
             type="text"
             id="username"
@@ -89,7 +98,9 @@ const Leaderboard = () => {
           />
         </div>
         <div className="mb-4">
-          <label className="block text-secondary mb-1" htmlFor="score">Score:</label>
+          <label className="block text-secondary mb-1" htmlFor="score">
+            Score:
+          </label>
           <input
             type="number"
             id="score"
@@ -98,11 +109,12 @@ const Leaderboard = () => {
             className="input input-bordered w-full"
           />
         </div>
-        <button type="submit" className="btn btn-primary w-full">Submit</button>
+        <button type="submit" className="btn btn-primary w-full">
+          Submit
+        </button>
       </form>
     </div>
   );
 };
 
 export default Leaderboard;
-
