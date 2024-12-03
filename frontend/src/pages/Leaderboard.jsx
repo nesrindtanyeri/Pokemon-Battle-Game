@@ -69,51 +69,48 @@ const Leaderboard = () => {
           {leaderboard.map((player, index) => (
             <tr key={player.id || player._id} className="text-center">
               <td className="border border-gray-300 px-4 py-2">{index + 1}</td>
-              <td className="border border-gray-300 px-4 py-2">
-                {player.username}
-              </td>
-              <td className="border border-gray-300 px-4 py-2">
-                {player.score}
-              </td>
+              <td className="border border-gray-300 px-4 py-2">{player.username}</td>
+              <td className="border border-gray-300 px-4 py-2">{player.score}</td>
             </tr>
           ))}
         </tbody>
       </table>
 
-      <form onSubmit={handleSubmit} className="bg-neutral p-4 rounded shadow">
-        <h2 className="text-xl font-bold text-primary mb-4">
-          Submit Your Score
-        </h2>
-        {error && <p className="text-error mb-2">{error}</p>}
-        {success && <p className="text-success mb-2">{success}</p>}
-        <div className="mb-4">
-          <label className="block text-secondary mb-1" htmlFor="username">
-            Name:
-          </label>
-          <input
-            type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className="input input-bordered w-full"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-secondary mb-1" htmlFor="score">
-            Score:
-          </label>
-          <input
-            type="number"
-            id="score"
-            value={score}
-            onChange={(e) => setScore(e.target.value)}
-            className="input input-bordered w-full"
-          />
-        </div>
-        <button type="submit" className="btn btn-primary w-full">
-          Submit
-        </button>
-      </form>
+      <form onSubmit={handleSubmit} className="bg-base-100 p-4 rounded shadow border border-base-300">
+  <h2 className="text-xl font-bold text-primary mb-4">
+    Submit Your Score
+  </h2>
+  {error && <p className="text-error mb-2">{error}</p>}
+  {success && <p className="text-success mb-2">{success}</p>}
+  <div className="mb-4">
+    <label className="block text-secondary mb-1" htmlFor="username">
+      Name:
+    </label>
+    <input
+      type="text"
+      id="username"
+      value={username}
+      onChange={(e) => setUsername(e.target.value)}
+      className="input input-bordered w-full border border-secondary focus:border-primary focus:outline-none p-2 rounded"
+    />
+  </div>
+  <div className="mb-4">
+    <label className="block text-secondary mb-1" htmlFor="score">
+      Score:
+    </label>
+    <input
+      type="number"
+      id="score"
+      value={score}
+      onChange={(e) => setScore(e.target.value)}
+      className="input input-bordered w-full border border-secondary focus:border-primary focus:outline-none p-2 rounded"
+    />
+  </div>
+  <button type="submit" className="btn btn-primary w-full">
+    Submit
+  </button>
+</form>
+
     </div>
   );
 };

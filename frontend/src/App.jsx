@@ -1,5 +1,4 @@
 import { createBrowserRouter, RouterProvider, createRoutesFromElements, Route } from 'react-router-dom';
-import { createBrowserRouter, RouterProvider, createRoutesFromElements, Route } from 'react-router-dom';
 import Homepage from './pages/Homepage';
 import PokemonDetails from './pages/PokemonDetails';
 import Layout from './components/Layout';
