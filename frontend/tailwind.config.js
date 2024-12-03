@@ -41,7 +41,7 @@ module.exports = {
           secondary: "#393E46",
           accent: "#00ADB5",
           neutral: "#EEEEEE",
-          "base-100": "#FFFFFF", // Default background color for the theme
+          "base-100": "#F29F58", // Default background color for the theme
           "info": "#3ABFF8",
           "success": "#36D399",
           "warning": "#FBBD23",
