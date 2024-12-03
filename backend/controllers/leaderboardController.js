@@ -1,7 +1,7 @@
-const Leaderboard = require('../models/leaderboard.model');
+import Leaderboard from '../models/leaderboardModel.js';
 
 // Retrieve all scores
-const getLeaderboard = async (req, res) => {
+export const getLeaderboard = async (req, res) => {
   try {
     const leaderboard = await Leaderboard.find().sort({ score: -1 });
     res.json(leaderboard);
@@ -11,7 +11,7 @@ const getLeaderboard = async (req, res) => {
 };
 
 // Add a new score
-const addScore = async (req, res) => {
+export const addScore = async (req, res) => {
   const { username, score } = req.body;
 
   if (!username || score === undefined) {
@@ -27,4 +27,3 @@ const addScore = async (req, res) => {
   }
 };
 
-module.exports = { getLeaderboard, addScore };

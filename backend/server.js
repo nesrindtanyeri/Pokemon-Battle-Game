@@ -1,13 +1,17 @@
-require('dotenv').config();
-const express = require('express');
-const connectDB = require('./config/database');
-const leaderboardRoutes = require('./routes/leaderboard.routes');
-const rosterRoutes = require('./routes/roster.routes'); // Import roster routes
-const errorHandler = require('./middlewares/errorHandler');
+import dotenv from 'dotenv'; 
+import express from 'express';
+import connectDB from './config/database.js';
+import leaderboardRoutes from './routes/leaderboardRoutes.js';
+import rosterRoutes from './routes/rosterRoutes.js';
+import errorHandler from './middlewares/errorHandler.js';
+import cors from 'cors';
+
+dotenv.config(); 
 
 const app = express();
 
 // Middleware to parse JSON
+app.use(cors());
 app.use(express.json());
 
 // Connect to MongoDB
@@ -15,7 +19,7 @@ connectDB();
 
 // Define routes
 app.use('/leaderboard', leaderboardRoutes);
-app.use('/roster', rosterRoutes); // Add the roster route
+app.use('/roster', rosterRoutes); 
 
 // Error handling middleware
 app.use(errorHandler);
@@ -23,3 +27,4 @@ app.use(errorHandler);
 // Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+

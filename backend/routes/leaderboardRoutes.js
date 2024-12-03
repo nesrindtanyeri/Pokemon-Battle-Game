@@ -1,6 +1,7 @@
-const express = require('express');
+import express from 'express';
+import { getLeaderboard, addScore } from '../controllers/leaderboardController.js';
+
 const router = express.Router();
-const { getLeaderboard, addScore } = require('../controllers/leaderboard.controller');
 
 // Define GET route for fetching leaderboard
 router.get('/', getLeaderboard);
@@ -8,4 +9,4 @@ router.get('/', getLeaderboard);
 // Define POST route for adding a new score
 router.post('/', addScore);
 
-module.exports = router;
+export default router;
