@@ -1,0 +1,23 @@
+require('dotenv').config();
+const express = require('express');
+const connectDB = require('./config/database');
+const leaderboardRoutes = require('./routes/leaderboard.routes');
+const errorHandler = require('./middlewares/errorHandler');
+
+const app = express();
+
+// Middleware to parse JSON
+app.use(express.json());
+
+// Connect to MongoDB
+connectDB();
+
+// Define routes
+app.use('/leaderboard', leaderboardRoutes);
+
+// Error handling middleware
+app.use(errorHandler);
+
+// Start the server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
