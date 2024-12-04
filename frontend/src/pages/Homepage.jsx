@@ -40,12 +40,32 @@ const Homepage = () => {
 
   if (!pokemonList || pokemonList.length === 0) {
     console.log("No Pokémon to display");
-    return <p className="text-center text-primary">No Pokémon available to display.</p>;
+    return (
+      <p className="text-center text-primary">
+        No Pokémon available to display.
+      </p>
+    );
   }
 
   return (
-    <div className="container mx-auto p-4 min-h-screen">
-      <h1 className="text-3xl font-bold text-center text-primary mb-6">Pokémon List</h1>
+    <div className="container mx-auto p-4">
+      {/* Hero Section */}
+      <div className="relative bg-black rounded-lg overflow-hidden mb-8">
+        <iframe
+          className="w-full h-64 sm:h-96 md:h-[500px] mx-auto"
+          src="https://www.youtube.com/embed/rg6CiPI6h2g?autoplay=1&mute=1&loop=1&playlist=rg6CiPI6h2g"
+          title="Pokemon Hero Video"
+          frameBorder="0"
+          allow="autoplay; encrypted-media; picture-in-picture"
+          allowFullScreen
+        ></iframe>
+        <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center"></div>
+      </div>
+
+      {/* Pokémon List */}
+      <h1 className="text-3xl font-bold text-center text-primary mb-6">
+        Pokémon List
+      </h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {pokemonList.map((pokemon, index) => {
           const pokemonId = index + 1; // PokeAPI IDs start from 1
@@ -60,7 +80,9 @@ const Homepage = () => {
                 alt={pokemon.name}
                 className="w-32 h-32 mx-auto"
               />
-              <h2 className="text-xl font-bold text-center capitalize mt-4">{pokemon.name}</h2>
+              <h2 className="text-xl font-bold text-center capitalize mt-4">
+                {pokemon.name}
+              </h2>
             </Link>
           );
         })}
