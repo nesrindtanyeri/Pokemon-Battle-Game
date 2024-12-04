@@ -19,10 +19,10 @@ export const getRoster = async (req, res) => {
 
 // Add a Pokémon to the roster
 export const addToRoster = async (req, res) => {
-  const { id, name, sprite } = req.body;
+  const { id, name, sprite, stats } = req.body;
 
   // Validate required fields
-  if (!id || !name || !sprite) {
+  if (!id || !name || !sprite || !stats) {
     return res.status(400).json({ message: 'Incomplete Pokémon data' });
   }
 
@@ -33,8 +33,21 @@ export const addToRoster = async (req, res) => {
       return res.status(400).json({ message: 'Pokémon already in roster' });
     }
 
+    // Ensure stats are formatted properly before saving
+    const formattedStats = stats.map(stat => ({
+      name: stat.stat.name, // Get the stat name (like 'hp', 'attack', etc.)
+      base_stat: stat.base_stat // Get the base_stat value
+    }));
+
     // Create new Pokémon entry
-    const newPokemon = new Roster({ id, name, sprite });
+    const newPokemon = new Roster({
+      id,
+      name,
+      sprite,
+      stats: formattedStats // Save the correctly formatted stats
+    });
+
+    // Save Pokémon
     const savedPokemon = await newPokemon.save();
 
     // Exclude _id before sending back to frontend
@@ -47,6 +60,7 @@ export const addToRoster = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
 
 // Remove a Pokémon from the roster
 export const removeFromRoster = async (req, res) => {
