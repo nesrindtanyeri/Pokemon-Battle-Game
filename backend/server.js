@@ -1,7 +1,7 @@
 import dotenv from 'dotenv'; 
 import express from 'express';
 import connectDB from './config/database.js';
-import leaderboardRoutes from './routes/leaderboardRoutes.js';
+import leaderboardRoutes from './routes/leaderboardRoutes.js'; 
 import rosterRoutes from './routes/rosterRoutes.js';
 import errorHandler from './middlewares/errorHandler.js';
 import cors from 'cors';
@@ -9,16 +9,6 @@ import cors from 'cors';
 dotenv.config(); 
 
 const app = express();
-
-
-const cors = require("cors");
-
-// Allow all origins or specify the frontend's origin
-app.use(cors({
-    origin: "http://localhost:5173" // Your frontend URL
-}));
-
-
 
 // Middleware to parse JSON
 app.use(cors());
