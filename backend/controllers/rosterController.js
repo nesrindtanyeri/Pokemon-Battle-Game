@@ -19,11 +19,11 @@ export const getRoster = async (req, res) => {
 
 // Add a Pokémon to the roster
 export const addToRoster = async (req, res) => {
-  const { id, name, sprite } = req.body;
+  const { id, name, sprite, stats } = req.body;
 
   // Validate required fields
-  if (!id || !name || !sprite) {
-    return res.status(400).json({ message: 'Incomplete Pokémon data' });
+  if (!id || !name || !sprite || !stats || !Array.isArray(stats)) {
+    return res.status(400).json({ message: 'Incomplete Pokémon data or invalid stats format' });
   }
 
   try {
@@ -34,7 +34,7 @@ export const addToRoster = async (req, res) => {
     }
 
     // Create new Pokémon entry
-    const newPokemon = new Roster({ id, name, sprite });
+    const newPokemon = new Roster({ id, name, sprite, stats });
     const savedPokemon = await newPokemon.save();
 
     // Exclude _id before sending back to frontend

@@ -2,30 +2,29 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const BattlePage = () => {
-  // set states
+  // Set states
   const [roster, setRoster] = useState([]);
   const [selectedPokemon, setSelectedPokemon] = useState(null);
   const [opponentPokemon, setOpponentPokemon] = useState(null);
   const [battleResult, setBattleResult] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-
-  // fetch roster
+  // Fetch roster
   useEffect(() => {
     const fetchRoster = async () => {
       try {
         const response = await axios.get('http://localhost:3000/roster');
         setRoster(response.data);
       } catch (err) {
-        console.error('Error fetching roster:', err);
+        console.error('Failed to load roster', err);
+      } finally {
+        setIsLoading(false);
       }
     };
-
     fetchRoster();
   }, []);
 
-
-  // fetch random opponent
+  // Fetch random opponent
   const fetchRandomPokemon = async () => {
     const randomId = Math.floor(Math.random() * 898) + 1; // Generate random ID (PokéAPI range)
     try {
@@ -36,7 +35,7 @@ const BattlePage = () => {
         sprite: response.data.sprites.front_default,
         stats: response.data.stats.map((stat) => ({
           name: stat.stat.name,
-          value: stat.base_stat,
+          base_stat: stat.base_stat, // Change from "value" to "base_stat"
         })) || [], // Fallback to empty array if stats are missing
       };
     } catch (err) {
@@ -45,7 +44,7 @@ const BattlePage = () => {
     }
   };
 
-  // handle battle
+  // Handle battle
   const handleBattle = async () => {
     if (!selectedPokemon) {
       alert('Please select a Pokémon from your roster!');
@@ -65,18 +64,25 @@ const BattlePage = () => {
     setOpponentPokemon(opponent);
 
     // Safely calculate total stats
-    const totalStatsUser = Array.isArray(selectedPokemon.stats)
-      ? selectedPokemon.stats.reduce((acc, stat) => acc + stat.value, 0)
+    const totalStatsUser = Array.isArray(selectedPokemon.stats) && selectedPokemon.stats.length > 0
+      ? selectedPokemon.stats.reduce((acc, stat) => {
+          return stat.base_stat ? acc + stat.base_stat : acc;
+        }, 0)
       : 0;
 
-    const totalStatsOpponent = Array.isArray(opponent.stats)
-      ? opponent.stats.reduce((acc, stat) => acc + stat.value, 0)
+    const totalStatsOpponent = Array.isArray(opponent.stats) && opponent.stats.length > 0
+      ? opponent.stats.reduce((acc, stat) => {
+          return stat.base_stat ? acc + stat.base_stat : acc;
+        }, 0)
       : 0;
+
+    console.log('Total Stats User:', totalStatsUser);
+    console.log('Total Stats Opponent:', totalStatsOpponent);
 
     if (totalStatsUser > totalStatsOpponent) {
       setBattleResult(`${selectedPokemon.name} wins!`);
       try {
-        await axios.post('http://localhost:3000/roster', opponent); // Add opponent to roster
+        await axios.post('http://localhost:3000/roster', opponent); 
         setRoster((prev) => [...prev, opponent]);
       } catch (err) {
         console.error('Error adding opponent to roster:', err);
@@ -84,7 +90,7 @@ const BattlePage = () => {
     } else if (totalStatsOpponent > totalStatsUser) {
       setBattleResult(`${opponent.name} wins!`);
       try {
-        await axios.delete(`http://localhost:3000/roster/${selectedPokemon.id}`); // Remove user Pokémon
+        await axios.delete(`http://localhost:3000/roster/${selectedPokemon.id}`); 
         setRoster((prev) => prev.filter((p) => p.id !== selectedPokemon.id));
       } catch (err) {
         console.error('Error removing Pokémon from roster:', err);
@@ -137,7 +143,7 @@ const BattlePage = () => {
             <div className="text-center">
               <img src={selectedPokemon?.sprite} alt={selectedPokemon?.name} className="w-32 h-32 mx-auto" />
               <h3 className="text-xl font-semibold">{selectedPokemon?.name}</h3>
-              <p>Total Stats: {Array.isArray(selectedPokemon?.stats) ? selectedPokemon.stats.reduce((acc, stat) => acc + stat.value, 0) : 0}</p>
+              <p>Total Stats: {Array.isArray(selectedPokemon?.stats) ? selectedPokemon.stats.reduce((acc, stat) => acc + stat.base_stat, 0) : 0}</p>
             </div>
 
             <h3 className="text-3xl font-bold text-center">VS</h3>
@@ -146,7 +152,7 @@ const BattlePage = () => {
             <div className="text-center">
               <img src={opponentPokemon?.sprite} alt={opponentPokemon?.name} className="w-32 h-32 mx-auto" />
               <h3 className="text-xl font-semibold">{opponentPokemon?.name}</h3>
-              <p>Total Stats: {Array.isArray(opponentPokemon?.stats) ? opponentPokemon.stats.reduce((acc, stat) => acc + stat.value, 0) : 0}</p>
+              <p>Total Stats: {Array.isArray(opponentPokemon?.stats) ? opponentPokemon.stats.reduce((acc, stat) => acc + stat.base_stat, 0) : 0}</p>
             </div>
           </div>
 
@@ -161,4 +167,5 @@ const BattlePage = () => {
 };
 
 export default BattlePage;
+
 
