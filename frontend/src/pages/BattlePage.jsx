@@ -101,7 +101,7 @@ const BattlePage = () => {
   };
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="container mx-auto p-6 min-h-screen">
       <h1 className="text-3xl font-bold text-center text-primary mb-6">Battle Arena</h1>
 
       {/* Roster Section */}
@@ -167,5 +167,3 @@ const BattlePage = () => {
 };
 
 export default BattlePage;
-
-

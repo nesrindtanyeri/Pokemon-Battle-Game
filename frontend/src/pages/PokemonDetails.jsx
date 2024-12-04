@@ -30,7 +30,7 @@ const PokemonDetails = () => {
         id: pokemon.id,
         name: pokemon.name,
         sprite: pokemon.sprites.front_default,
-        stats: pokemon.stats, // Add stats to the POST request
+        stats: pokemon.stats, 
       });
       
       alert(`${pokemon.name} has been added to your roster!`);
