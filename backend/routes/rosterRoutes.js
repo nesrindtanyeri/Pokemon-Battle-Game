@@ -1,7 +1,10 @@
 import express from 'express'; 
-import { getRoster, addToRoster, removeFromRoster } from '../controllers/rosterController.js';
+import { getTest, getRoster, addToRoster, removeFromRoster } from '../controllers/rosterController.js';
 
 const router = express.Router();
+
+// GET /test: Test route
+router.get('/test', getTest);
 
 // GET /roster: Get the roster
 router.get('/', getRoster);

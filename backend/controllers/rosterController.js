@@ -1,5 +1,13 @@
 import Roster from '../models/rosterModel.js';
 
+export const getTest = async (req, res) => {
+  try {
+    res.status(200).json({ message: 'Test route working' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
 export const getRoster = async (req, res) => {
   try {
     const roster = await Roster.find();
@@ -59,4 +67,3 @@ export const removeFromRoster = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
-  

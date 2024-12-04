@@ -22,18 +22,19 @@ const PokemonDetails = () => {
 
   const addToRoster = async (pokemon) => {
     try {
-      // Send Pokémon data to the backend
+      console.log('Adding Pokémon:', pokemon); // Debug log
       await axios.post('http://localhost:3000/roster', {
         id: pokemon.id,
         name: pokemon.name,
         sprite: pokemon.sprites.front_default,
       });
-
       alert(`${pokemon.name} has been added to your roster!`);
     } catch (err) {
+      console.error('Error adding Pokémon to roster:', err.response?.data || err.message);
       alert('Failed to add Pokémon to roster.');
     }
   };
+  
 
   if (error) return <p className="text-error">{error}</p>;
   if (!pokemon) return <p className="text-primary">Loading...</p>;
@@ -85,11 +86,12 @@ const PokemonDetails = () => {
 
       {/* Add to Roster Button */}
       <button
-        onClick={() => addToRoster(pokemon)}
-        className="mt-6 px-6 py-2 bg-accent text-neutral font-bold rounded hover:bg-accent-focus"
-      >
-        Add to Roster
-      </button>
+  onClick={() => addToRoster(pokemon)}
+  className="mt-6 px-6 py-2 bg-accent text-neutral font-bold rounded hover:bg-accent-focus"
+>
+  Add to Roster
+</button>
+
     </div>
     </div>
   );
