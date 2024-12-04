@@ -39,6 +39,7 @@ const PokemonDetails = () => {
   if (!pokemon) return <p className="text-primary">Loading...</p>;
 
   return (
+    <div className="min-h-screen flex justify-center items-center">
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold text-center capitalize text-primary">{pokemon.name}</h1>
       <div className="flex flex-col md:flex-row items-center md:items-start gap-6 mt-6">
@@ -90,7 +91,8 @@ const PokemonDetails = () => {
         Add to Roster
       </button>
     </div>
+    </div>
   );
 };
 
-export default PokemonDetails;
+export default PokemonDetails;    

@@ -11,9 +11,7 @@ const Homepage = () => {
     const fetchPokemonList = async () => {
       console.log("Fetching Pokémon list...");
       try {
-        const response = await axios.get(
-          "https://pokeapi.co/api/v2/pokemon?limit=50"
-        );
+        const response = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=16'); // Adjust limit as needed
         console.log("Fetched Pokémon list:", response.data.results);
         setPokemonList(response.data.results);
         console.log("Updated Pokémon List State:", response.data.results);
