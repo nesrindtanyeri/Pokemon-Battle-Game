@@ -20,6 +20,14 @@ const Navbar = () => {
                         >
                             Home
                         </NavLink>
+                  </li>
+                  <li>
+                        <NavLink 
+                            to="/login" 
+                            className={({ isActive }) => isActive ? "text-primary font-bold" : ""}
+                        >
+                            Log In
+                        </NavLink>
                     </li>
                     <li>
                         <NavLink 

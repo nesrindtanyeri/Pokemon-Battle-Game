@@ -12,7 +12,7 @@ export const getTest = async (req, res) => {
 // Fetch the roster
 export const getRoster = async (req, res) => {
   try {
-    const roster = await Roster.find();
+    const roster = await Roster.find({ userId: req.user.id });
     res.json(roster);
   } catch (error) {
     res.status(500).json({ message: 'Failed to fetch roster.' });
@@ -33,7 +33,7 @@ export const addToRoster = async (req, res) => {
       return res.status(400).json({ message: 'Pokémon already exists in the roster.' });
     }
 
-    const newPokemon = new Roster({ id, name, sprite, stats });
+    const newPokemon = new Roster({ userId: req.user.id, id, name, sprite, stats });
     const savedPokemon = await newPokemon.save();
     res.status(201).json({ message: 'Pokémon added to roster.', pokemon: savedPokemon });
   } catch (error) {

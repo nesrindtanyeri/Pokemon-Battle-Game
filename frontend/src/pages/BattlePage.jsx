@@ -77,6 +77,20 @@ const Battle = () => {
     }
   };
 
+  // Update leaderboard
+  const updateLeaderboard = async (username, xp) => {
+    try
+    {
+      const token = localStorage.getItem("token"); // Store token in localStorage upon login
+      await axios.post("http://localhost:3000/leaderboard", {
+        username: user.username, score: xp }, // Include username
+      { headers: { Authorization: `Bearer ${token}` } } // Pass token in headers
+      );
+    } catch (err) {
+      console.error("Failed to update leaderboard:", err.message);
+    }
+  };
+
   // Handle battle logic
   const handleBattle = async () => {
     if (!pokemon1 || !pokemon2) return;
@@ -84,23 +98,32 @@ const Battle = () => {
     const stat1 = pokemon1.stats.reduce((sum, stat) => sum + stat.base_stat, 0);
     const stat2 = pokemon2.stats.reduce((sum, stat) => sum + stat.base_stat, 0);
 
-    if (stat1 > stat2) {
-      setResult(`${pokemon1.name} wins!`);
-      setScore((prev) => ({
-        ...prev,
-        wins: prev.wins + 1,
-        xp: prev.xp + 10,
-      }));
-      await addToRoster(pokemon1);
-    } else if (stat2 > stat1) {
-      setResult(`${pokemon2.name} wins!`);
-      setScore((prev) => ({
-        ...prev,
-        losses: prev.losses + 1,
-      }));
-      await removeFromRoster(pokemon1.id);
-    } else {
-      setResult("It's a draw!");
+    try {
+      if (stat1 > stat2) {
+        setResult(`${pokemon1.name} wins!`);
+        setScore((prev) => ({
+          ...prev,
+          wins: prev.wins + 1,
+          xp: prev.xp + 10,
+        }));
+        await addToRoster(pokemon1);
+        await updateLeaderboard(pokemon1.name, score.xp + 10);
+      } else if (stat2 > stat1) {
+        setResult(`${pokemon2.name} wins!`);
+        setScore((prev) => ({
+          ...prev,
+          losses: prev.losses + 1,
+        }));
+
+        await removeFromRoster(pokemon1.id);
+        await updateLeaderboard(pokemon2.name, 0);
+      } else {
+        setResult("It's a draw!");
+      }
+
+      fetchBattlePokemons();
+    } catch (error) {
+      console.error("Error during battle:", error);
     }
   };
 
@@ -186,4 +209,3 @@ const Battle = () => {
 };
 
 export default Battle;
-
