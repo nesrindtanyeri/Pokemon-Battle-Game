@@ -11,6 +11,8 @@ const Battle = () => {
     losses: 0,
     xp: 0,
   });
+  const [roster, setRoster] = useState([]); // User's roster
+  const [selectedPokemon, setSelectedPokemon] = useState(null); // Selected Pokémon
 
   // Fetch roster Pokémon and a random Pokémon
   const fetchBattlePokemons = async () => {
@@ -24,6 +26,7 @@ const Battle = () => {
         return;
       }
 
+      setRoster(rosterPokemons);
       const randomRosterPokemon =
         rosterPokemons[Math.floor(Math.random() * rosterPokemons.length)];
       setPokemon1(randomRosterPokemon);
@@ -79,12 +82,12 @@ const Battle = () => {
 
   // Update leaderboard
   const updateLeaderboard = async (username, xp) => {
-    try
-    {
-      const token = localStorage.getItem("token"); // Store token in localStorage upon login
-      await axios.post("http://localhost:3000/leaderboard", {
-        username: user.username, score: xp }, // Include username
-      { headers: { Authorization: `Bearer ${token}` } } // Pass token in headers
+    try {
+      const token = localStorage.getItem("token"); // Assume user is logged in
+      await axios.post(
+        "http://localhost:3000/leaderboard",
+        { username, score: xp },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
     } catch (err) {
       console.error("Failed to update leaderboard:", err.message);
@@ -114,7 +117,6 @@ const Battle = () => {
           ...prev,
           losses: prev.losses + 1,
         }));
-
         await removeFromRoster(pokemon1.id);
         await updateLeaderboard(pokemon2.name, 0);
       } else {
@@ -126,12 +128,12 @@ const Battle = () => {
       console.error("Error during battle:", error);
     }
   };
-  
-  
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold text-center text-primary mb-6">Pokémon Battle</h1>
+      <h1 className="text-3xl font-bold text-center text-primary mb-6">
+        Pokémon Battle
+      </h1>
 
       {/* Roster Pokémon */}
       <h2 className="text-xl font-bold text-secondary mb-4">Your Roster</h2>
@@ -146,44 +148,53 @@ const Battle = () => {
             whileHover={{ scale: 1.05 }}
           >
             <img
-              src={pokemon1.sprite}
-              alt={pokemon1.name}
+              src={pokemon.sprite}
+              alt={pokemon.name}
               className="w-40 h-40 mx-auto"
             />
-            <h2 className="text-xl font-bold capitalize text-center mt-4">{pokemon1.name}</h2>
+            <h2 className="text-xl font-bold capitalize text-center mt-4">
+              {pokemon.name}
+            </h2>
             <p className="text-sm text-center">
-              Total Stats: {pokemon1.stats.reduce((sum, stat) => sum + stat.base_stat, 0)}
+              Total Stats:{" "}
+              {pokemon.stats.reduce((sum, stat) => sum + stat.base_stat, 0)}
             </p>
           </motion.div>
         ))}
       </div>
 
-        <h2 className="text-2xl font-bold text-primary">VS</h2>
+      <h2 className="text-2xl font-bold text-primary">VS</h2>
 
-        {pokemon2 && (
-          <motion.div
-            className={`card bg-secondary text-neutral p-4 shadow-md rounded ${
-              result.includes(pokemon2.name) ? "bg-success" : ""
-            }`}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-          >
-            <img
-              src={pokemon2.sprite}
-              alt={pokemon2.name}
-              className="w-40 h-40 mx-auto"
-            />
-            <h2 className="text-xl font-bold capitalize text-center mt-4">{pokemon2.name}</h2>
-            <p className="text-sm text-center">
-              Total Stats: {pokemon2.stats.reduce((sum, stat) => sum + stat.base_stat, 0)}
-            </p>
-          </motion.div>
-        )}
-      </div>
+      {pokemon2 && (
+        <motion.div
+          className={`card bg-secondary text-neutral p-4 shadow-md rounded ${
+            result.includes(pokemon2.name) ? "bg-success" : ""
+          }`}
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <img
+            src={pokemon2.sprite}
+            alt={pokemon2.name}
+            className="w-40 h-40 mx-auto"
+          />
+          <h2 className="text-xl font-bold capitalize text-center mt-4">
+            {pokemon2.name}
+          </h2>
+          <p className="text-sm text-center">
+            Total Stats:{" "}
+            {pokemon2.stats.reduce((sum, stat) => sum + stat.base_stat, 0)}
+          </p>
+        </motion.div>
+      )}
 
       {/* Battle Result */}
-      {result && <p className="text-lg font-semibold text-primary text-center mb-4">{result}</p>}
+      {result && (
+        <p className="text-lg font-semibold text-primary text-center mb-4">
+          {result}
+        </p>
+      )}
 
       {/* Battle Buttons */}
       <div className="flex justify-center gap-4">
@@ -215,3 +226,4 @@ const Battle = () => {
 };
 
 export default Battle;
+

@@ -39,8 +39,6 @@ export const addToRoster = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: 'Failed to add Pokémon to roster.' });
     res.status(201).json({ message: 'Pokémon added to roster.', pokemon: savedPokemon });
-  } catch (error) {
-    res.status(500).json({ message: 'Failed to add Pokémon to roster.' });
   }
 };
 
@@ -48,15 +46,11 @@ export const addToRoster = async (req, res) => {
 export const removeFromRoster = async (req, res) => {
   const { id } = req.params;
 
-
   try {
     const deletedPokemon = await Roster.findOneAndDelete({ id });
     if (!deletedPokemon) {
       return res.status(404).json({ message: 'Pokémon not found in the roster.' });
-    const deletedPokemon = await Roster.findOneAndDelete({ id });
-    if (!deletedPokemon) {
-      return res.status(404).json({ message: 'Pokémon not found in the roster.' });
-    }
+         }
 
     res.status(200).json({ message: 'Pokémon removed from roster.', pokemon: deletedPokemon });
   } catch (error) {
