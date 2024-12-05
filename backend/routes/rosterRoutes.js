@@ -8,13 +8,13 @@ const router = express.Router();
 router.get('/test', getTest);
 
 // Get Roster: GET /roster
-router.get('/', authMiddleware, getRoster);
+router.get('/', /* authMiddleware, */ getRoster);
 
 // Add to Roster: POST /roster
-router.post('/', authMiddleware, addToRoster);
+router.post('/', /* authMiddleware, */ addToRoster);
 
 // Remove from Roster: DELETE /roster/:id
-router.delete('/:id', authMiddleware, removeFromRoster);
+router.delete('/:id', /* authMiddleware, */removeFromRoster);
 
 export default router;
 

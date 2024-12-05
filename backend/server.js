@@ -18,6 +18,8 @@ app.use(express.json());
 // Middleware to parse URL-encoded data
 app.use(express.urlencoded({ extended: true }));    
 
+app.use('/auth', authRoutes); // `/auth/login` will now point to the login route
+
 connectDB();
 
 app.use('/leaderboard', leaderboardRoutes);

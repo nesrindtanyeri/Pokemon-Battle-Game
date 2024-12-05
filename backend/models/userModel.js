@@ -19,6 +19,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "Please provide a password"],
     },
+    role: { type: String, enum: ["user", "admin"], default: "user" }, // Role field
   },
   { timestamps: true } // Adds createdAt and updatedAt timestamps
 );

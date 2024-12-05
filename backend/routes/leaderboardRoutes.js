@@ -16,7 +16,7 @@ router.get("/", getLeaderboard); async (req, res) => {
 };
 
 // Add new score
-router.post("/", authMiddleware, addScore); async (req, res) => {
+router.post("/", /* authMiddleware, */ addScore); async (req, res) => {
   const { username, score } = req.body;
 
   if (!username || !score || isNaN(score) || score < 0) {
