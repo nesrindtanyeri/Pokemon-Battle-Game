@@ -25,18 +25,29 @@ const PokemonDetails = () => {
 
   const addToRoster = async (pokemon) => {
     try {
+      if (!pokemon || !pokemon.sprites || !pokemon.stats) {
+        throw new Error("Incomplete Pokémon data.");
+      }
+  
+      const formattedStats = pokemon.stats.map((stat) => ({
+        name: stat.stat.name, // e.g., "hp", "attack", etc.
+        base_stat: stat.base_stat, // e.g., 45, 60, etc.
+      }));
+  
       await axios.post("http://localhost:3000/roster", {
         id: pokemon.id,
         name: pokemon.name,
-        sprite: pokemon.sprites.front_default,
-        stats: pokemon.stats,
+        sprite: pokemon.sprites.other?.["official-artwork"]?.front_default || pokemon.sprites.front_default,
+        stats: formattedStats,
       });
+  
       alert(`${pokemon.name} has been added to your roster!`);
     } catch (err) {
       console.error("Error adding Pokémon to roster:", err.response?.data || err.message);
       alert("Failed to add Pokémon to roster.");
     }
   };
+  
 
   // Navigate to a specific Pokémon ID
   const navigateToPokemon = (newId) => {
@@ -114,7 +125,10 @@ const PokemonDetails = () => {
         {/* Add to Roster Button */}
         <div className="text-center mt-6">
           <button
-            onClick={() => addToRoster(pokemon)}
+            onClick={() => {
+              console.log(pokemon);
+              addToRoster(pokemon);
+            }}
             className="px-8 py-3 bg-gray-200 text-black font-bold rounded-lg shadow hover:bg-accent-focus transition-transform transform hover:scale-105"
           >
             Add to Roster
