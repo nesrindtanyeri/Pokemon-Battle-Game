@@ -83,10 +83,11 @@ const Battle = () => {
   // Update leaderboard
   const updateLeaderboard = async (username, xp) => {
     try {
-      const token = localStorage.getItem("token"); // Assume user is logged in
+      //const token = localStorage.getItem("token"); // user is logged in
       await axios.post(
         "http://localhost:3000/leaderboard",
         { username, score: xp },
+        
         { headers: { Authorization: `Bearer ${token}` } }
       );
     } catch (err) {
@@ -94,40 +95,71 @@ const Battle = () => {
     }
   };
 
-  // Handle battle logic
-  const handleBattle = async () => {
-    if (!pokemon1 || !pokemon2) return;
+// Handle battle logic
+const handleBattle = async () => {
+  if (!pokemon1 || !pokemon2) {
+    console.error("Pokémon data is missing for the battle.");
+    return;
+  }
 
-    const stat1 = pokemon1.stats.reduce((sum, stat) => sum + stat.base_stat, 0);
-    const stat2 = pokemon2.stats.reduce((sum, stat) => sum + stat.base_stat, 0);
+  const stat1 = pokemon1.stats.reduce((sum, stat) => sum + stat.base_stat, 0);
+  const stat2 = pokemon2.stats.reduce((sum, stat) => sum + stat.base_stat, 0);
 
-    try {
-      if (stat1 > stat2) {
-        setResult(`${pokemon1.name} wins!`);
-        setScore((prev) => ({
-          ...prev,
-          wins: prev.wins + 1,
-          xp: prev.xp + 10,
-        }));
-        await addToRoster(pokemon1);
-        await updateLeaderboard(pokemon1.name, score.xp + 10);
-      } else if (stat2 > stat1) {
-        setResult(`${pokemon2.name} wins!`);
-        setScore((prev) => ({
-          ...prev,
-          losses: prev.losses + 1,
-        }));
-        await removeFromRoster(pokemon1.id);
-        await updateLeaderboard(pokemon2.name, 0);
-      } else {
-        setResult("It's a draw!");
+  // Get the username (from a user context or localStorage)
+  //const username = localStorage.getItem("username"); // if username is stored in localStorage
+  const username = "TestUser"; // Temporary hardcoded username for testing
+  if (!username) {
+    console.error("Username is missing. Ensure the user is logged in.");
+    alert("Please log in to participate in battles.");
+    return;
+  }
+
+  try {
+    if (stat1 > stat2) {
+      setResult(`${pokemon1.name} wins!`);
+      const updatedXp = score.xp + 10;
+
+      setScore((prev) => ({
+        ...prev,
+        wins: prev.wins + 1,
+        xp: updatedXp,
+      }));
+
+      await addToRoster(pokemon1);
+
+      // Validate username and score before updating the leaderboard
+      if (!username.trim() || isNaN(updatedXp) || updatedXp < 0) {
+        console.error("Invalid username or score for leaderboard update.");
+        return;
       }
 
-      fetchBattlePokemons();
-    } catch (error) {
-      console.error("Error during battle:", error);
+      await updateLeaderboard(username, updatedXp);
+    } else if (stat2 > stat1) {
+      setResult(`${pokemon2.name} wins!`);
+      setScore((prev) => ({
+        ...prev,
+        losses: prev.losses + 1,
+      }));
+
+      await removeFromRoster(pokemon1.id);
+
+      // Validate username before updating the leaderboard
+      if (!username.trim()) {
+        console.error("Invalid username for leaderboard update.");
+        return;
+      }
+
+      await updateLeaderboard(username, 0);
+    } else {
+      setResult("It's a draw!");
     }
-  };
+
+    fetchBattlePokemons();
+  } catch (error) {
+    console.error("Error during battle:", error);
+  }
+};
+
 
   return (
     <div className="container mx-auto p-4">

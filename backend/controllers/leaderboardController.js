@@ -32,7 +32,8 @@ export const addOrUpdateLeaderboardEntry = async (req, res) => {
     } else {
       // Add a new entry if the player does not exist
       const newEntry = new Leaderboard({
-        username,
+        userId: req.user.id,
+        username: req.user.username, // Use the username from the token
         score,
         date: new Date(),
       });
