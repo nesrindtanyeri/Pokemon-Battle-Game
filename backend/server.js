@@ -5,6 +5,7 @@ import connectDB from "./config/database.js";
 import leaderboardRoutes from "./routes/leaderboardRoutes.js";
 import rosterRoutes from "./routes/rosterRoutes.js";
 import errorHandler from "./middlewares/errorHandler.js";
+import authRoutes from "./routes/authRoutes.js";
 
 dotenv.config();
 
@@ -22,6 +23,8 @@ connectDB();
 app.use('/leaderboard', leaderboardRoutes);
 app.use('/roster', rosterRoutes);
 app.use(errorHandler);
+app.use("/auth", authRoutes);
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
