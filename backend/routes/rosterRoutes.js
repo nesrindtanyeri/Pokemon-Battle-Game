@@ -1,15 +1,19 @@
 import express from 'express';
-import { getRoster, addToRoster, removeFromRoster } from '../controllers/rosterController.js';
+import { getTest, getRoster, addToRoster, removeFromRoster } from '../controllers/rosterController.js';
 
 const router = express.Router();
 
-// Fetch all Pokémon in the roster
+// Test Route: GET /test
+router.get('/test', getTest);
+
+// Get Roster: GET /roster
 router.get('/', getRoster);
 
-// Add a new Pokémon to the roster
+// Add to Roster: POST /roster
 router.post('/', addToRoster);
 
-// Remove a Pokémon from the roster
+// Remove from Roster: DELETE /roster/:id
 router.delete('/:id', removeFromRoster);
 
 export default router;
+
