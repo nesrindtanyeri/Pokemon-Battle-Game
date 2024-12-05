@@ -49,7 +49,7 @@ const Battle = () => {
 
       setResult(""); // Reset result for new battle
     } catch (error) {
-      console.error("Failed to fetch Pokémon:", error);
+      console.error("Failed to fetch random Pokémon:", error);
     }
   };
 
@@ -126,20 +126,24 @@ const Battle = () => {
       console.error("Error during battle:", error);
     }
   };
+  
+  
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold text-center text-primary mb-6">Pokémon Battle</h1>
 
-      <div className="flex flex-col sm:flex-row justify-around items-center gap-6 mb-6">
-        {pokemon1 && (
+      {/* Roster Pokémon */}
+      <h2 className="text-xl font-bold text-secondary mb-4">Your Roster</h2>
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
+        {roster.map((pokemon) => (
           <motion.div
+            key={pokemon.id}
             className={`card bg-secondary text-neutral p-4 shadow-md rounded ${
-              result.includes(pokemon1.name) ? "bg-success" : ""
+              selectedPokemon?.id === pokemon.id ? "border-4 border-accent" : ""
             }`}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
+            onClick={() => setSelectedPokemon(pokemon)}
+            whileHover={{ scale: 1.05 }}
           >
             <img
               src={pokemon1.sprite}
@@ -151,7 +155,8 @@ const Battle = () => {
               Total Stats: {pokemon1.stats.reduce((sum, stat) => sum + stat.base_stat, 0)}
             </p>
           </motion.div>
-        )}
+        ))}
+      </div>
 
         <h2 className="text-2xl font-bold text-primary">VS</h2>
 
@@ -177,10 +182,10 @@ const Battle = () => {
         )}
       </div>
 
-      <div className="text-center mb-4">
-        {result && <p className="text-lg font-semibold text-primary">{result}</p>}
-      </div>
+      {/* Battle Result */}
+      {result && <p className="text-lg font-semibold text-primary text-center mb-4">{result}</p>}
 
+      {/* Battle Buttons */}
       <div className="flex justify-center gap-4">
         <motion.button
           onClick={handleBattle}
@@ -198,6 +203,7 @@ const Battle = () => {
         </motion.button>
       </div>
 
+      {/* Scoreboard */}
       <div className="bg-base-200 p-4 mt-6 rounded shadow-md">
         <h2 className="text-xl font-bold text-primary mb-4">Scoreboard</h2>
         <p>Wins: {score.wins}</p>

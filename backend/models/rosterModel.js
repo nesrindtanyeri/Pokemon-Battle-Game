@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const rosterSchema = new mongoose.Schema({
-  id: { type: Number, required: true },
+  id: { type: Number, required: true, unique: true, },
   name: { type: String, required: true },
   sprite: { type: String, required: true },
   stats: [
