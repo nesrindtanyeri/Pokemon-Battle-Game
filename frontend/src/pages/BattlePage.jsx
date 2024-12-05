@@ -3,8 +3,8 @@ import axios from "axios";
 import { motion } from "framer-motion";
 
 const Battle = () => {
-  const [pokemon1, setPokemon1] = useState(null);
-  const [pokemon2, setPokemon2] = useState(null);
+  const [pokemon1, setPokemon1] = useState(null); // User's Pokémon
+  const [pokemon2, setPokemon2] = useState(null); // Random Pokémon
   const [result, setResult] = useState("");
   const [score, setScore] = useState({
     wins: 0,
@@ -12,17 +12,41 @@ const Battle = () => {
     xp: 0,
   });
 
-  // Fetch two random Pokémon
-  const fetchRandomPokemon = async () => {
+  // Fetch roster Pokémon and a random Pokémon
+  const fetchBattlePokemons = async () => {
     try {
-      const id1 = Math.floor(Math.random() * 150) + 1;
-      const id2 = Math.floor(Math.random() * 150) + 1;
+      // Fetch user's roster Pokémon
+      const rosterResponse = await axios.get("http://localhost:3000/roster");
+      const rosterPokemons = rosterResponse.data;
 
-      const response1 = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id1}`);
-      const response2 = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id2}`);
+      if (!rosterPokemons.length) {
+        setResult("Your roster is empty! Add Pokémon to your roster to battle.");
+        return;
+      }
 
-      setPokemon1(response1.data);
-      setPokemon2(response2.data);
+      const randomRosterPokemon =
+        rosterPokemons[Math.floor(Math.random() * rosterPokemons.length)];
+      setPokemon1(randomRosterPokemon);
+
+      // Fetch a random Pokémon
+      const randomId = Math.floor(Math.random() * 150) + 1;
+      const randomPokemonResponse = await axios.get(
+        `https://pokeapi.co/api/v2/pokemon/${randomId}`
+      );
+      const randomPokemon = randomPokemonResponse.data;
+
+      // Format stats for random Pokémon
+      const formattedStats = randomPokemon.stats.map((stat) => ({
+        name: stat.stat.name,
+        base_stat: stat.base_stat,
+      }));
+      setPokemon2({
+        id: randomPokemon.id,
+        name: randomPokemon.name,
+        sprite: randomPokemon.sprites.other["official-artwork"].front_default,
+        stats: formattedStats,
+      });
+
       setResult(""); // Reset result for new battle
     } catch (error) {
       console.error("Failed to fetch Pokémon:", error);
@@ -30,11 +54,31 @@ const Battle = () => {
   };
 
   useEffect(() => {
-    fetchRandomPokemon();
+    fetchBattlePokemons();
   }, []);
 
+  // Add winner to roster
+  const addToRoster = async (pokemon) => {
+    try {
+      await axios.post("http://localhost:3000/roster", pokemon);
+      console.log(`${pokemon.name} added to roster!`);
+    } catch (err) {
+      console.error("Failed to add Pokémon to roster:", err.message);
+    }
+  };
+
+  // Remove loser from roster
+  const removeFromRoster = async (id) => {
+    try {
+      await axios.delete(`http://localhost:3000/roster/${id}`);
+      console.log(`Pokémon with ID ${id} removed from roster.`);
+    } catch (err) {
+      console.error("Failed to remove Pokémon from roster:", err.message);
+    }
+  };
+
   // Handle battle logic
-  const handleBattle = () => {
+  const handleBattle = async () => {
     if (!pokemon1 || !pokemon2) return;
 
     const stat1 = pokemon1.stats.reduce((sum, stat) => sum + stat.base_stat, 0);
@@ -47,12 +91,14 @@ const Battle = () => {
         wins: prev.wins + 1,
         xp: prev.xp + 10,
       }));
+      await addToRoster(pokemon1);
     } else if (stat2 > stat1) {
       setResult(`${pokemon2.name} wins!`);
       setScore((prev) => ({
         ...prev,
         losses: prev.losses + 1,
       }));
+      await removeFromRoster(pokemon1.id);
     } else {
       setResult("It's a draw!");
     }
@@ -73,7 +119,7 @@ const Battle = () => {
             transition={{ duration: 0.5 }}
           >
             <img
-              src={pokemon1.sprites.other["official-artwork"].front_default}
+              src={pokemon1.sprite}
               alt={pokemon1.name}
               className="w-40 h-40 mx-auto"
             />
@@ -96,7 +142,7 @@ const Battle = () => {
             transition={{ duration: 0.5 }}
           >
             <img
-              src={pokemon2.sprites.other["official-artwork"].front_default}
+              src={pokemon2.sprite}
               alt={pokemon2.name}
               className="w-40 h-40 mx-auto"
             />
@@ -121,7 +167,7 @@ const Battle = () => {
           Battle!
         </motion.button>
         <motion.button
-          onClick={fetchRandomPokemon}
+          onClick={fetchBattlePokemons}
           className="btn btn-secondary px-6 py-2"
           whileHover={{ scale: 1.1 }}
         >
@@ -140,3 +186,4 @@ const Battle = () => {
 };
 
 export default Battle;
+
