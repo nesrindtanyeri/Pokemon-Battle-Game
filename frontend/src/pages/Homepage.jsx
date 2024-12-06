@@ -8,26 +8,36 @@ const Homepage = () => {
   const [pokemonList, setPokemonList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const ITEMS_PER_PAGE = 16;
+
+  // Fetch Pokémon List
+  const fetchPokemonList = async (page) => {
+    setLoading(true);
+    setError(null);
+    console.log("Fetching Pokémon list...");
+    try {
+      const offset = (page - 1) * ITEMS_PER_PAGE;
+      const response = await axios.get(
+        `https://pokeapi.co/api/v2/pokemon?limit=${ITEMS_PER_PAGE}&offset=${offset}`
+      );
+      console.log("Fetched Pokémon list:", response.data.results);
+      setPokemonList(response.data.results);
+      setTotalPages(Math.ceil(response.data.count / ITEMS_PER_PAGE)); // Total pages calculation
+      setCurrentPage(page);
+      toast.success("Pokémon list loaded successfully!");
+    } catch (err) {
+      console.error("Error fetching Pokémon:", err);
+      setError("Failed to load Pokémon. Please try again later.");
+      toast.error("Failed to load Pokémon. Please try again.");
+    } finally {
+      setLoading(false); // Ensure loading is set to false
+    }
+  };
 
   useEffect(() => {
-    const fetchPokemonList = async () => {
-      console.log("Fetching Pokémon list...");
-      try {
-        const response = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=16'); // Adjust limit as needed
-        console.log("Fetched Pokémon list:", response.data.results);
-        setPokemonList(response.data.results);
-        console.log("Updated Pokémon List State:", response.data.results);
-        toast.success("Pokémon list loaded successfully!");
-      } catch (err) {
-        console.error("Error fetching Pokémon:", err);
-        setError("Failed to load Pokémon. Please try again later.");
-        toast.error("Failed to load Pokémon. Please try again.");
-      } finally {
-        setLoading(false); // Ensure loading is set to false
-      }
-    };
-
-    fetchPokemonList();
+    fetchPokemonList(1); // Fetch first page initially
   }, []);
 
   console.log("Pokemon List:", pokemonList);
@@ -73,7 +83,7 @@ const Homepage = () => {
       </h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {pokemonList.map((pokemon, index) => {
-          const pokemonId = index + 1; // PokeAPI IDs start from 1
+          const pokemonId = (currentPage - 1) * ITEMS_PER_PAGE + index + 1; // Correct Pokémon ID for pagination
           return (
             <Link
               to={`/pokemon/${pokemonId}`}
@@ -91,6 +101,27 @@ const Homepage = () => {
             </Link>
           );
         })}
+      </div>
+
+      {/* Pagination Controls */}
+      <div className="flex justify-center mt-6">
+        <button
+          onClick={() => fetchPokemonList(currentPage - 1)}
+          disabled={currentPage === 1}
+          className="btn btn-secondary mr-2 disabled:opacity-50"
+        >
+          Previous
+        </button>
+        <span className="text-primary font-semibold mx-4">
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={() => fetchPokemonList(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className="btn btn-secondary disabled:opacity-50"
+        >
+          Next
+        </button>
       </div>
     </div>
   );
