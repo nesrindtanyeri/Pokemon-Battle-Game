@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -14,12 +16,14 @@ const Login = () => {
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("username", username); // Store username for later use
       alert("Login successful!");
+      toast.success("Login successful!");
     } catch (error) {
       console.error(
         "Error during login:",
         error.response?.data || error.message
       );
       alert("Login failed!");
+      toast.error("Login failed! Please check your credentials.");
     }
   };
 
@@ -40,6 +44,7 @@ const Login = () => {
 
   return (
     <div className="container mx-auto flex justify-center items-center min-h-screen p-4">
+       <ToastContainer />
       <div className="bg-base-100 p-6 rounded shadow-lg w-full max-w-md">
         <h1 className="text-2xl font-bold text-primary text-center mb-6">
           Welcome Back

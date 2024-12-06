@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Homepage = () => {
   const [pokemonList, setPokemonList] = useState([]);
@@ -15,9 +17,11 @@ const Homepage = () => {
         console.log("Fetched Pokémon list:", response.data.results);
         setPokemonList(response.data.results);
         console.log("Updated Pokémon List State:", response.data.results);
+        toast.success("Pokémon list loaded successfully!");
       } catch (err) {
         console.error("Error fetching Pokémon:", err);
         setError("Failed to load Pokémon. Please try again later.");
+        toast.error("Failed to load Pokémon. Please try again.");
       } finally {
         setLoading(false); // Ensure loading is set to false
       }
@@ -49,6 +53,7 @@ const Homepage = () => {
 
   return (
     <div className="container mx-auto p-4">
+      <ToastContainer />
       {/* Hero Section */}
       <div className="relative bg-black rounded-lg overflow-hidden mb-8">
         <iframe

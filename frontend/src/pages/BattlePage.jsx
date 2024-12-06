@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
+import { ToastContainer, toast } from "react-toastify"; 
+import "react-toastify/dist/ReactToastify.css"; 
 
 const Battle = () => {
   const [pokemon1, setPokemon1] = useState(null); // User's Pokémon
@@ -23,6 +25,7 @@ const Battle = () => {
 
       if (!rosterPokemons.length) {
         setResult("Your roster is empty! Add Pokémon to your roster to battle.");
+        toast.error("Your roster is empty!");
         return;
       }
 
@@ -51,6 +54,7 @@ const Battle = () => {
       setResult(""); // Reset result for new battle
     } catch (error) {
       console.error("Failed to fetch Pokémon data:", error);
+      toast.error("Failed to fetch Pokémon data.");
     }
   };
 
@@ -63,8 +67,10 @@ const Battle = () => {
     try {
       await axios.post("http://localhost:3000/roster", pokemon);
       console.log(`${pokemon.name} added to roster!`);
+      toast.success(`${pokemon.name} added to roster!`);
     } catch (err) {
       console.error("Failed to add Pokémon to roster:", err.message);
+      toast.error("Failed to add Pokémon to roster.");
     }
   };
 
@@ -73,8 +79,10 @@ const Battle = () => {
     try {
       await axios.delete(`http://localhost:3000/roster/${id}`);
       console.log(`Pokémon with ID ${id} removed from roster.`);
+      toast.info("Pokémon removed from roster.");
     } catch (err) {
       console.error("Failed to remove Pokémon from roster:", err.message);
+      toast.error("Failed to remove Pokémon from roster.");
     }
   };
 
@@ -87,8 +95,10 @@ const Battle = () => {
         { username, score: xp },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+      toast.success("Leaderboard updated!");
     } catch (err) {
       console.error("Failed to update leaderboard:", err.message);
+      toast.error("Failed to update leaderboard.");
     }
   };
 
@@ -124,16 +134,19 @@ const Battle = () => {
         await removeFromRoster(selectedPokemon.id); // Remove user's Pokémon
       } else {
         setResult("It's a draw!");
+        toast.info("It's a draw!");
       }
 
       fetchBattlePokemons();
     } catch (error) {
       console.error("Error during battle:", error);
+      toast.error("An error occurred during the battle.");
     }
   };
 
   return (
     <div className="container mx-auto p-4">
+      <ToastContainer />
       <h1 className="text-3xl font-bold text-center text-primary mb-6">
         Pokémon Battle
       </h1>
