@@ -85,16 +85,14 @@ const PokemonDetails = () => {
             <img
               src={pokemon.sprites.other["official-artwork"].front_default}
               alt={pokemon.name}
-              className="w-64 h-64 rounded-lg border border-black border-200"
+              className="bg-secondary w-64 h-64 rounded-lg border border-black border-200"
             />
           </div>
 
           {/* Pokémon Stats */}
           <div className="col-span-2">
-            <div className="bg-base-100 p-4 rounded-lg shadow-sm mb-4 border border-black border-200">
-              <h2 className="text-2xl font-semibold text-gray-800 mb-3">
-                Stats
-              </h2>
+            <div className="bg-secondary text-white p-4 rounded-lg shadow-sm mb-4 border border-black border-200">
+              <h2 className="text-2xl font-semibold text-white mb-800 mb-3">Stats</h2>
               <ul className="grid grid-cols-2 gap-2">
                 {pokemon.stats.map((stat) => (
                   <li key={stat.stat.name} className="flex justify-between">
@@ -106,10 +104,8 @@ const PokemonDetails = () => {
             </div>
 
             {/* Pokémon Types */}
-            <div className="bg-base-100 p-4 rounded-lg shadow-sm mb-4 border border-black border-200">
-              <h2 className="text-2xl font-semibold text-gray-800 mb-3">
-                Types
-              </h2>
+            <div className="bg-secondary p-4 rounded-lg shadow-sm mb-4 border border-black border-200">
+              <h2 className="text-2xl font-semibold text-white mb-3">Types</h2>
               <ul className="flex space-x-4">
                 {pokemon.types.map((type) => (
                   <li
@@ -123,10 +119,8 @@ const PokemonDetails = () => {
             </div>
 
             {/* Pokémon Abilities */}
-            <div className="bg-base-100 p-4 rounded-lg shadow-sm border border-black border-200">
-              <h2 className="text-2xl font-semibold text-gray-800 mb-3">
-                Abilities
-              </h2>
+            <div className="bg-secondary p-4 rounded-lg shadow-sm border border-black border-200">
+              <h2 className="text-2xl font-semibold text-white mb-3">Abilities</h2>
               <ul className="grid grid-cols-2 gap-2">
                 {pokemon.abilities.map((ability) => (
                   <li

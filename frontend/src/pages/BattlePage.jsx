@@ -5,16 +5,15 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; 
 
 const Battle = () => {
-  const [pokemon1, setPokemon1] = useState(null); // User's Pokémon
   const [pokemon2, setPokemon2] = useState(null); // Random Pokémon
+  const [roster, setRoster] = useState([]); // User's roster
+  const [selectedPokemon, setSelectedPokemon] = useState(null); // Selected Pokémon
   const [result, setResult] = useState("");
   const [score, setScore] = useState({
     wins: 0,
     losses: 0,
     xp: 0,
   });
-  const [roster, setRoster] = useState([]); // User's roster
-  const [selectedPokemon, setSelectedPokemon] = useState(null); // Selected Pokémon
 
   // Fetch roster Pokémon and a random Pokémon
   const fetchBattlePokemons = async () => {
@@ -22,9 +21,10 @@ const Battle = () => {
       // Fetch user's roster Pokémon
       const rosterResponse = await axios.get("http://localhost:3000/roster");
       const rosterPokemons = rosterResponse.data;
+      
 
       if (!rosterPokemons.length) {
-        setResult("Your roster is empty! Add Pokémon to your roster to battle.");
+        setRoster("Your roster is empty! Add Pokémon to your roster to battle.");
         toast.error("Your roster is empty!");
         return;
       }
@@ -117,7 +117,8 @@ const Battle = () => {
 
     try {
       if (userPokemonStats > opponentPokemonStats) {
-        setResult(`${selectedPokemon.name} wins!`);
+        setResult(`${selectedPokemon.name} wins!, you win ${pokemon2.name}`);
+        alert(`You win! ${pokemon2.name} has been added to your roster.`);
         setScore((prev) => ({
           ...prev,
           wins: prev.wins + 1,
@@ -126,7 +127,8 @@ const Battle = () => {
         await addToRoster(pokemon2); // Add opponent Pokémon to user's roster
         await updateLeaderboard("Player", score.xp + 10);
       } else if (opponentPokemonStats > userPokemonStats) {
-        setResult(`${pokemon2.name} wins!`);
+        setResult(`${pokemon2.name} wins!, you lose ${selectedPokemon.name}`);
+        alert(`You lose! ${selectedPokemon.name} has been removed from your roster.`);
         setScore((prev) => ({
           ...prev,
           losses: prev.losses + 1,
@@ -142,7 +144,9 @@ const Battle = () => {
       console.error("Error during battle:", error);
       toast.error("An error occurred during the battle.");
     }
+    setResult("");
   };
+
 
   return (
     <div className="container mx-auto p-4">
@@ -183,7 +187,7 @@ const Battle = () => {
 
       {pokemon2 && (
         <motion.div
-          className="card bg-secondary text-neutral p-4 shadow-md rounded"
+          className="card bg-secondary text-neutral p-4 shadow-md rounded w-full mx-auto"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
@@ -205,13 +209,13 @@ const Battle = () => {
 
       {/* Battle Result */}
       {result && (
-        <p className="text-lg font-semibold text-primary text-center mb-4">
+        <p className="text-lg font-semibold text-primary text-center mb-4 p-4">
           {result}
         </p>
       )}
 
       {/* Battle Buttons */}
-      <div className="flex justify-center gap-4">
+      <div className="flex justify-center gap-4 p-4">
         <motion.button
           onClick={handleBattle}
           className="btn btn-primary px-6 py-2"
