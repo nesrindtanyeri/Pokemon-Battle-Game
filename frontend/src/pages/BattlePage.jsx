@@ -170,7 +170,7 @@ const Battle = () => {
 
       {pokemon2 && (
         <motion.div
-          className="card bg-secondary text-neutral p-4 shadow-md rounded"
+          className="card bg-secondary text-neutral p-4 shadow-md rounded w-full mx-auto"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
@@ -198,7 +198,7 @@ const Battle = () => {
       )}
 
       {/* Battle Buttons */}
-      <div className="flex justify-center gap-4">
+      <div className="flex justify-center gap-4 p-4">
         <motion.button
           onClick={handleBattle}
           className="btn btn-primary px-6 py-2"
