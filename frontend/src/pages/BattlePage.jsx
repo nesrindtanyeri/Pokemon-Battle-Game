@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
 
@@ -27,9 +27,7 @@ const Battle = () => {
       }
 
       setRoster(rosterPokemons);
-      const randomRosterPokemon =
-        rosterPokemons[Math.floor(Math.random() * rosterPokemons.length)];
-      setPokemon1(randomRosterPokemon);
+      setSelectedPokemon(rosterPokemons[0]); // Default to the first Pokémon
 
       // Fetch a random Pokémon
       const randomId = Math.floor(Math.random() * 150) + 1;
@@ -52,7 +50,7 @@ const Battle = () => {
 
       setResult(""); // Reset result for new battle
     } catch (error) {
-      console.error("Failed to fetch random Pokémon:", error);
+      console.error("Failed to fetch Pokémon data:", error);
     }
   };
 
@@ -83,81 +81,56 @@ const Battle = () => {
   // Update leaderboard
   const updateLeaderboard = async (username, xp) => {
     try {
- 
+      const token = localStorage.getItem("token"); // Assume user is logged in
       await axios.post(
         "http://localhost:3000/leaderboard",
         { username, score: xp },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
-      console.log("Leaderboard updated successfully!");
     } catch (err) {
       console.error("Failed to update leaderboard:", err.message);
     }
   };
 
-// Handle battle logic
-const handleBattle = async () => {
-  if (!pokemon1 || !pokemon2) {
-    console.error("Pokémon data is missing for the battle.");
-    return;
-  }
+  // Handle battle logic
+  const handleBattle = async () => {
+    if (!selectedPokemon || !pokemon2) return;
 
-  const stat1 = pokemon1.stats.reduce((sum, stat) => sum + stat.base_stat, 0);
-  const stat2 = pokemon2.stats.reduce((sum, stat) => sum + stat.base_stat, 0);
+    const userPokemonStats = selectedPokemon.stats.reduce(
+      (sum, stat) => sum + stat.base_stat,
+      0
+    );
+    const opponentPokemonStats = pokemon2.stats.reduce(
+      (sum, stat) => sum + stat.base_stat,
+      0
+    );
 
-
-  const username = "TestUser"; // Temporary hardcoded username for testing
-  if (!username) {
-    console.error("Username is missing. Ensure the user is logged in.");
-    alert("Please log in to participate in battles.");
-    return;
-  }
-
-  try {
-    if (stat1 > stat2) {
-      setResult(`${pokemon1.name} wins!`);
-      const updatedXp = score.xp + 10;
-
-      setScore((prev) => ({
-        ...prev,
-        wins: prev.wins + 1,
-        xp: updatedXp,
-      }));
-
-      await addToRoster(pokemon1);
-
-      // Validate username and score before updating the leaderboard
-      if (!username.trim() || isNaN(updatedXp) || updatedXp < 0) {
-        console.error("Invalid username or score for leaderboard update.");
-        return;
+    try {
+      if (userPokemonStats > opponentPokemonStats) {
+        setResult(`${selectedPokemon.name} wins!`);
+        setScore((prev) => ({
+          ...prev,
+          wins: prev.wins + 1,
+          xp: prev.xp + 10,
+        }));
+        await addToRoster(pokemon2); // Add opponent Pokémon to user's roster
+        await updateLeaderboard("Player", score.xp + 10);
+      } else if (opponentPokemonStats > userPokemonStats) {
+        setResult(`${pokemon2.name} wins!`);
+        setScore((prev) => ({
+          ...prev,
+          losses: prev.losses + 1,
+        }));
+        await removeFromRoster(selectedPokemon.id); // Remove user's Pokémon
+      } else {
+        setResult("It's a draw!");
       }
 
-      await updateLeaderboard(username, updatedXp);
-    } else if (stat2 > stat1) {
-      setResult(`${pokemon2.name} wins!`);
-      setScore((prev) => ({
-        ...prev,
-        losses: prev.losses + 1,
-      }));
-
-      await removeFromRoster(pokemon1.id);
-
-      // Validate username before updating the leaderboard
-      if (!username.trim()) {
-        console.error("Invalid username for leaderboard update.");
-        return;
-      }
-
-      await updateLeaderboard(username, 0);
-    } else {
-      setResult("It's a draw!");
+      fetchBattlePokemons();
+    } catch (error) {
+      console.error("Error during battle:", error);
     }
-
-    fetchBattlePokemons();
-  } catch (error) {
-    console.error("Error during battle:", error);
-  }
-};
-
+  };
 
   return (
     <div className="container mx-auto p-4">
@@ -193,13 +166,11 @@ const handleBattle = async () => {
         ))}
       </div>
 
-      <h2 className="text-2xl font-bold text-primary">VS</h2>
+      <h2 className="text-2xl font-bold text-primary text-center mb-4">VS</h2>
 
       {pokemon2 && (
         <motion.div
-          className={`card bg-secondary text-neutral p-4 shadow-md rounded ${
-            result.includes(pokemon2.name) ? "bg-success" : ""
-          }`}
+          className="card bg-secondary text-neutral p-4 shadow-md rounded"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
@@ -256,4 +227,3 @@ const handleBattle = async () => {
 };
 
 export default Battle;
-
