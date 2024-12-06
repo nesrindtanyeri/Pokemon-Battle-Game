@@ -83,13 +83,12 @@ const Battle = () => {
   // Update leaderboard
   const updateLeaderboard = async (username, xp) => {
     try {
-      //const token = localStorage.getItem("token"); // user is logged in
+ 
       await axios.post(
         "http://localhost:3000/leaderboard",
         { username, score: xp },
-        
-        { headers: { Authorization: `Bearer ${token}` } }
       );
+      console.log("Leaderboard updated successfully!");
     } catch (err) {
       console.error("Failed to update leaderboard:", err.message);
     }
@@ -105,8 +104,7 @@ const handleBattle = async () => {
   const stat1 = pokemon1.stats.reduce((sum, stat) => sum + stat.base_stat, 0);
   const stat2 = pokemon2.stats.reduce((sum, stat) => sum + stat.base_stat, 0);
 
-  // Get the username (from a user context or localStorage)
-  //const username = localStorage.getItem("username"); // if username is stored in localStorage
+
   const username = "TestUser"; // Temporary hardcoded username for testing
   if (!username) {
     console.error("Username is missing. Ensure the user is logged in.");

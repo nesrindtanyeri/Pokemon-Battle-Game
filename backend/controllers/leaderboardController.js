@@ -1,5 +1,6 @@
 import Leaderboard from '../models/leaderboardModel.js';
 
+
 // Fetch the leaderboard
 export const getLeaderboard = async (req, res) => {
   try {
@@ -32,8 +33,7 @@ export const addOrUpdateLeaderboardEntry = async (req, res) => {
     } else {
       // Add a new entry if the player does not exist
       const newEntry = new Leaderboard({
-        userId: req.user.id,
-        username: req.user.username, // Use the username from the token
+        username,
         score,
         date: new Date(),
       });
