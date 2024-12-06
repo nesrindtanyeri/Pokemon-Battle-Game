@@ -1,20 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { motion } from "framer-motion";
 
 const Battle = () => {
-  const [pokemon1, setPokemon1] = useState(null); // User's Pokémon
-  const [pokemon2, setPokemon2] = useState(null); // Random Pokémon
+  const [userPokemon, setUserPokemon] = useState(null); // User's selected Pokémon
+  const [opponentPokemon, setOpponentPokemon] = useState(null); // Opponent Pokémon
   const [result, setResult] = useState("");
-  const [score, setScore] = useState({
-    wins: 0,
-    losses: 0,
-    xp: 0,
-  });
   const [roster, setRoster] = useState([]); // User's roster
-  const [selectedPokemon, setSelectedPokemon] = useState(null); // Selected Pokémon
 
-  // Fetch roster Pokémon and a random Pokémon
+  // Fetch roster Pokémon and a random opponent Pokémon
   const fetchBattlePokemons = async () => {
     try {
       // Fetch user's roster Pokémon
@@ -27,32 +20,26 @@ const Battle = () => {
       }
 
       setRoster(rosterPokemons);
-      const randomRosterPokemon =
-        rosterPokemons[Math.floor(Math.random() * rosterPokemons.length)];
-      setPokemon1(randomRosterPokemon);
 
-      // Fetch a random Pokémon
+      // Fetch a random opponent Pokémon
       const randomId = Math.floor(Math.random() * 150) + 1;
       const randomPokemonResponse = await axios.get(
         `https://pokeapi.co/api/v2/pokemon/${randomId}`
       );
       const randomPokemon = randomPokemonResponse.data;
 
-      // Format stats for random Pokémon
-      const formattedStats = randomPokemon.stats.map((stat) => ({
-        name: stat.stat.name,
-        base_stat: stat.base_stat,
-      }));
-      setPokemon2({
+      // Format stats for opponent Pokémon
+      setOpponentPokemon({
         id: randomPokemon.id,
         name: randomPokemon.name,
-        sprite: randomPokemon.sprites.other["official-artwork"].front_default,
-        stats: formattedStats,
+        sprite: randomPokemon.sprites.front_default,
+        attack: randomPokemon.stats.find((s) => s.stat.name === "attack").base_stat,
+        defense: randomPokemon.stats.find((s) => s.stat.name === "defense").base_stat,
       });
 
       setResult(""); // Reset result for new battle
     } catch (error) {
-      console.error("Failed to fetch random Pokémon:", error);
+      console.error("Failed to fetch Pokémon:", error);
     }
   };
 
@@ -60,69 +47,28 @@ const Battle = () => {
     fetchBattlePokemons();
   }, []);
 
-  // Add winner to roster
-  const addToRoster = async (pokemon) => {
-    try {
-      await axios.post("http://localhost:3000/roster", pokemon);
-      console.log(`${pokemon.name} added to roster!`);
-    } catch (err) {
-      console.error("Failed to add Pokémon to roster:", err.message);
-    }
-  };
-
-  // Remove loser from roster
-  const removeFromRoster = async (id) => {
-    try {
-      await axios.delete(`http://localhost:3000/roster/${id}`);
-      console.log(`Pokémon with ID ${id} removed from roster.`);
-    } catch (err) {
-      console.error("Failed to remove Pokémon from roster:", err.message);
-    }
-  };
-
-  // Update leaderboard
-  const updateLeaderboard = async (username, xp) => {
-    try {
-      const token = localStorage.getItem("token"); // Assume user is logged in
-      await axios.post(
-        "http://localhost:3000/leaderboard",
-        { username, score: xp },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-    } catch (err) {
-      console.error("Failed to update leaderboard:", err.message);
-    }
-  };
-
   // Handle battle logic
   const handleBattle = async () => {
-    if (!pokemon1 || !pokemon2) return;
+    if (!userPokemon || !opponentPokemon) return;
 
-    const stat1 = pokemon1.stats.reduce((sum, stat) => sum + stat.base_stat, 0);
-    const stat2 = pokemon2.stats.reduce((sum, stat) => sum + stat.base_stat, 0);
+    // Compare attack stats
+    const userAttack = userPokemon.attack;
+    const opponentAttack = opponentPokemon.attack;
 
     try {
-      if (stat1 > stat2) {
-        setResult(`${pokemon1.name} wins!`);
-        setScore((prev) => ({
-          ...prev,
-          wins: prev.wins + 1,
-          xp: prev.xp + 10,
-        }));
-        await addToRoster(pokemon1);
-        await updateLeaderboard(pokemon1.name, score.xp + 10);
-      } else if (stat2 > stat1) {
-        setResult(`${pokemon2.name} wins!`);
-        setScore((prev) => ({
-          ...prev,
-          losses: prev.losses + 1,
-        }));
-        await removeFromRoster(pokemon1.id);
-        await updateLeaderboard(pokemon2.name, 0);
+      if (userAttack > opponentAttack) {
+        setResult(`${userPokemon.name} wins!`);
+        // Add opponent's Pokémon to roster
+        await axios.post("http://localhost:3000/roster", opponentPokemon);
+      } else if (opponentAttack > userAttack) {
+        setResult(`${opponentPokemon.name} wins!`);
+        // Remove user's Pokémon from roster
+        await axios.delete(`http://localhost:3000/roster/${userPokemon.id}`);
       } else {
-        setResult("It's a draw!");
+        setResult("It's a draw! No changes to the roster.");
       }
 
+      // Refresh battle setup
       fetchBattlePokemons();
     } catch (error) {
       console.error("Error during battle:", error);
@@ -135,95 +81,66 @@ const Battle = () => {
         Pokémon Battle
       </h1>
 
-      {/* Roster Pokémon */}
+      {/* User's Roster */}
       <h2 className="text-xl font-bold text-secondary mb-4">Your Roster</h2>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
         {roster.map((pokemon) => (
-          <motion.div
+          <div
             key={pokemon.id}
-            className={`card bg-secondary text-neutral p-4 shadow-md rounded ${
-              selectedPokemon?.id === pokemon.id ? "border-4 border-accent" : ""
+            className={`card p-4 rounded ${
+              userPokemon?.id === pokemon.id ? "border-4 border-accent" : ""
             }`}
-            onClick={() => setSelectedPokemon(pokemon)}
-            whileHover={{ scale: 1.05 }}
+            onClick={() => setUserPokemon(pokemon)}
           >
             <img
               src={pokemon.sprite}
               alt={pokemon.name}
-              className="w-40 h-40 mx-auto"
+              className="w-24 h-24 mx-auto"
             />
-            <h2 className="text-xl font-bold capitalize text-center mt-4">
+            <h2 className="text-lg font-bold text-center capitalize">
               {pokemon.name}
             </h2>
-            <p className="text-sm text-center">
-              Total Stats:{" "}
-              {pokemon.stats.reduce((sum, stat) => sum + stat.base_stat, 0)}
-            </p>
-          </motion.div>
+            <p className="text-sm text-center">Attack: {pokemon.attack}</p>
+          </div>
         ))}
       </div>
 
-      <h2 className="text-2xl font-bold text-primary">VS</h2>
+      <h2 className="text-2xl font-bold text-primary mb-4">VS</h2>
 
-      {pokemon2 && (
-        <motion.div
-          className={`card bg-secondary text-neutral p-4 shadow-md rounded ${
-            result.includes(pokemon2.name) ? "bg-success" : ""
-          }`}
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
-        >
+      {/* Opponent Pokémon */}
+      {opponentPokemon && (
+        <div className="card p-4 rounded shadow-lg">
           <img
-            src={pokemon2.sprite}
-            alt={pokemon2.name}
-            className="w-40 h-40 mx-auto"
+            src={opponentPokemon.sprite}
+            alt={opponentPokemon.name}
+            className="w-24 h-24 mx-auto"
           />
-          <h2 className="text-xl font-bold capitalize text-center mt-4">
-            {pokemon2.name}
+          <h2 className="text-lg font-bold text-center capitalize mt-2">
+            {opponentPokemon.name}
           </h2>
-          <p className="text-sm text-center">
-            Total Stats:{" "}
-            {pokemon2.stats.reduce((sum, stat) => sum + stat.base_stat, 0)}
-          </p>
-        </motion.div>
+          <p className="text-sm text-center">Attack: {opponentPokemon.attack}</p>
+        </div>
       )}
 
       {/* Battle Result */}
       {result && (
-        <p className="text-lg font-semibold text-primary text-center mb-4">
+        <p className="text-lg font-semibold text-primary text-center my-4">
           {result}
         </p>
       )}
 
-      {/* Battle Buttons */}
-      <div className="flex justify-center gap-4">
-        <motion.button
+      {/* Battle Button */}
+      <div className="flex justify-center">
+        <button
           onClick={handleBattle}
           className="btn btn-primary px-6 py-2"
-          whileTap={{ scale: 0.9 }}
+          disabled={!userPokemon}
         >
           Battle!
-        </motion.button>
-        <motion.button
-          onClick={fetchBattlePokemons}
-          className="btn btn-secondary px-6 py-2"
-          whileHover={{ scale: 1.1 }}
-        >
-          New Battle
-        </motion.button>
-      </div>
-
-      {/* Scoreboard */}
-      <div className="bg-base-200 p-4 mt-6 rounded shadow-md">
-        <h2 className="text-xl font-bold text-primary mb-4">Scoreboard</h2>
-        <p>Wins: {score.wins}</p>
-        <p>Losses: {score.losses}</p>
-        <p>XP: {score.xp}</p>
+        </button>
       </div>
     </div>
   );
 };
 
 export default Battle;
-
