@@ -39,6 +39,8 @@ export const addToRoster = async (req, res) => {
 
     // Create a new Pokémon document
     const newPokemon = new Roster({ id, name, sprite, stats });
+
+    // Save the new Pokémon to the database
     const savedPokemon = await newPokemon.save();
 
     // Respond with success
