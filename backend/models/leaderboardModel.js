@@ -9,7 +9,7 @@ const leaderboardSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    required: true
+    required: false
   }, // Reference to User
   score: {
     type: Number,

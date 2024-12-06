@@ -73,14 +73,15 @@ const Leaderboard = () => {
           </tr>
         </thead>
         <tbody>
-          {leaderboard.map((player, index) => (
-            <tr key={player.id || player._id} className="text-center">
-              <td className="border border-gray-300 px-4 py-2">{index + 1}</td>
-              <td className="border border-gray-300 px-4 py-2">{player.username}</td>
-              <td className="border border-gray-300 px-4 py-2">{player.score}</td>
-            </tr>
-          ))}
-        </tbody>
+  {leaderboard.map((player, index) => (
+    <tr key={player.id || player._id} className="text-center">
+      <td className="border border-gray-300 px-4 py-2">{index + 1}</td>
+      <td className="border border-gray-300 px-4 py-2">{player.username}</td>
+      <td className="border border-gray-300 px-4 py-2">{player.score}</td>
+    </tr>
+  ))}
+</tbody>
+
       </table>
 
       <form onSubmit={handleSubmit} className="bg-base-100 p-4 rounded shadow border border-base-300">
