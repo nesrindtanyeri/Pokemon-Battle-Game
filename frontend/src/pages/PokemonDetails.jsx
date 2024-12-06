@@ -54,8 +54,11 @@ const PokemonDetails = () => {
         "Error adding Pokémon to roster:",
         err.response?.data || err.message
       );
-      alert("Failed to add Pokémon to roster.");
-      toast.error("Failed to add Pokémon to roster.");
+      if (err.response?.status === 400 && err.response?.data?.message === "Pokémon already exists in the roster.") {
+        toast.info(`${pokemon.name} is already in your roster.`);
+      } else {
+        toast.error("Failed to add Pokémon to roster.");
+      }
     }
   };
 
