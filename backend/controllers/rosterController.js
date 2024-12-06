@@ -36,7 +36,6 @@ export const addToRoster = async (req, res) => {
     }
 
     const newPokemon = new Roster({
-      userId: req.user.id,
       id,
       name,
       sprite,

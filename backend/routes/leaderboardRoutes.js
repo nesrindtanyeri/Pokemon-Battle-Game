@@ -1,7 +1,6 @@
 import express from "express";
 import Leaderboard from "../models/leaderboardModel.js";
-import { addScore, getLeaderboard } from "../controllers/leaderboardController.js";
-import authMiddleware from "../middlewares/authMiddleware.js";
+import { addOrUpdateLeaderboardEntry, getLeaderboard } from "../controllers/leaderboardController.js";
 
 const router = express.Router();
 
@@ -16,7 +15,7 @@ router.get("/", getLeaderboard); async (req, res) => {
 };
 
 // Add new score
-router.post("/", /* authMiddleware, */ addScore); async (req, res) => {
+router.post("/",  addOrUpdateLeaderboardEntry); async (req, res) => {
   const { username, score } = req.body;
 
   if (!username || !score || isNaN(score) || score < 0) {
