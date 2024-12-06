@@ -1,7 +1,5 @@
 import Leaderboard from '../models/leaderboardModel.js';
 
-
-// Fetch the leaderboard
 export const getLeaderboard = async (req, res) => {
   try {
     const leaderboard = await Leaderboard.find()
@@ -13,7 +11,6 @@ export const getLeaderboard = async (req, res) => {
   }
 };
 
-// Add or update leaderboard entry
 export const addOrUpdateLeaderboardEntry = async (req, res) => {
   const { username, score } = req.body;
 
@@ -22,17 +19,14 @@ export const addOrUpdateLeaderboardEntry = async (req, res) => {
   }
 
   try {
-    // Check if the player already exists on the leaderboard
-    const existingPlayer = await Leaderboard.findOne({ username });
+      const existingPlayer = await Leaderboard.findOne({ username });
 
     if (existingPlayer) {
-      // Update score if the player already exists
-      existingPlayer.score += score; // Increment existing score
+       existingPlayer.score += score; 
       await existingPlayer.save();
       return res.status(200).json({ message: 'Score updated.', player: existingPlayer });
     } else {
-      // Add a new entry if the player does not exist
-      const newEntry = new Leaderboard({
+       const newEntry = new Leaderboard({
         username,
         score,
         date: new Date(),
