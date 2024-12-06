@@ -105,7 +105,7 @@ const Battle = () => {
   // Handle battle logic
   const handleBattle = async () => {
     if (!selectedPokemon || !pokemon2) return;
-
+  
     const userPokemonStats = selectedPokemon.stats.reduce(
       (sum, stat) => sum + stat.base_stat,
       0
@@ -114,31 +114,36 @@ const Battle = () => {
       (sum, stat) => sum + stat.base_stat,
       0
     );
-
+  
     try {
       if (userPokemonStats > opponentPokemonStats) {
-        setResult(`${selectedPokemon.name} wins!, you win ${pokemon2.name}`);
+        setResult(`${selectedPokemon.name} wins! You win ${pokemon2.name}.`);
         alert(`You win! ${pokemon2.name} has been added to your roster.`);
         setScore((prev) => ({
           ...prev,
           wins: prev.wins + 1,
           xp: prev.xp + 10,
         }));
+  
         await addToRoster(pokemon2); // Add opponent Pokémon to user's roster
-        await updateLeaderboard("Player", score.xp + 10);
+        await updateLeaderboard("Player", score.xp + 10); // Update leaderboard for player
+  
       } else if (opponentPokemonStats > userPokemonStats) {
-        setResult(`${pokemon2.name} wins!, you lose ${selectedPokemon.name}`);
+        setResult(`${pokemon2.name} wins! You lose ${selectedPokemon.name}.`);
         alert(`You lose! ${selectedPokemon.name} has been removed from your roster.`);
         setScore((prev) => ({
           ...prev,
           losses: prev.losses + 1,
         }));
+  
         await removeFromRoster(selectedPokemon.id); // Remove user's Pokémon
+        await updateLeaderboard("Computer", 10); // Update leaderboard for computer
+  
       } else {
         setResult("It's a draw!");
         toast.info("It's a draw!");
       }
-
+  
       fetchBattlePokemons();
     } catch (error) {
       console.error("Error during battle:", error);
@@ -146,6 +151,7 @@ const Battle = () => {
     }
     setResult("");
   };
+  
 
 
   return (

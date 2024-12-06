@@ -13,7 +13,6 @@ const MyRoster = () => {
       try {
         const response = await axios.get('http://localhost:3000/roster');
         setRoster(response.data);
-        toast.success("Roster loaded successfully!");
       } catch (err) {
         setError('Failed to load roster');
         toast.error("Failed to load roster.");
@@ -46,10 +45,8 @@ const MyRoster = () => {
     try {
       await axios.delete(`http://localhost:3000/roster/${pokemonId}`);
       setRoster(roster.filter((p) => p.id !== pokemonId));
-      toast.success("Pokémon removed from roster!");
     } catch (err) {
       console.error(err);
-      toast.error("Failed to remove Pokémon.");
     }
   };
 
