@@ -26,7 +26,6 @@ const Leaderboard = () => {
     fetchLeaderboard();
   }, []);
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -48,7 +47,7 @@ const Leaderboard = () => {
       setUsername("");
       setScore("");
 
-      // Reload leaderboard
+
       const response = await axios.get("http://localhost:3000/leaderboard");
       setLeaderboard(response.data);
     } catch (err) {

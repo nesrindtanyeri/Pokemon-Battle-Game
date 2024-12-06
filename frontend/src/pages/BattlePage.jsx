@@ -160,8 +160,6 @@ const Battle = () => {
       <h1 className="text-3xl font-bold text-center text-primary mb-6">
         Pokémon Battle
       </h1>
-
-      {/* Roster Pokémon */}
       <h2 className="text-xl font-bold text-secondary mb-4">Your Roster</h2>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
         {roster.map((pokemon) => (
@@ -217,14 +215,12 @@ const Battle = () => {
 
 
 
-      {/* Battle Result */}
       {result && (
         <p className="text-lg font-semibold text-primary text-center mb-4 p-4">
           {result}
         </p>
       )}
 
-      {/* Battle Buttons */}
       <div className="flex justify-center gap-4 p-4">
         <motion.button
           onClick={handleBattle}
@@ -242,7 +238,6 @@ const Battle = () => {
         </motion.button>
       </div>
 
-      {/* Scoreboard */}
       <div className="bg-base-200 p-4 mt-6 rounded shadow-md">
         <h2 className="text-xl font-bold text-primary mb-4">Scoreboard</h2>
         <p>Wins: {score.wins}</p>

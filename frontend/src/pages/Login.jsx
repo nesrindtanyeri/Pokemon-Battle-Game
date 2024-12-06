@@ -29,17 +29,17 @@ const Login = () => {
 
   const handleGoogleLogin = () => {
     alert("Google Login Clicked!");
-    // Integrate Google OAuth
+    
   };
 
   const handleAppleLogin = () => {
     alert("Apple Login Clicked!");
-    // Integrate Apple OAuth
+    
   };
 
   const handleSignup = () => {
     alert("Signup with Email Clicked!");
-    // Redirect to Signup page or open modal
+    
   };
 
   return (
@@ -51,7 +51,7 @@ const Login = () => {
         </h1>
 
         <form className="space-y-4">
-          {/* Username/Email Input */}
+          
           <div>
             <label htmlFor="username" className="block text-secondary mb-2">
               Username or Email
@@ -66,7 +66,7 @@ const Login = () => {
             />
           </div>
 
-          {/* Password Input */}
+          
           <div>
             <label htmlFor="password" className="block text-secondary mb-2">
               Password
@@ -81,7 +81,7 @@ const Login = () => {
             />
           </div>
 
-          {/* Login Button */}
+          
           <button
             type="button"
             onClick={handleLogin}
@@ -91,17 +91,17 @@ const Login = () => {
           </button>
         </form>
 
-        {/* Divider */}
+        
         <div className="divider text-secondary my-4">Or</div>
 
-        {/* Alternative Login Options */}
+        
         <div className="space-y-3">
           <button
             type="button"
             onClick={handleGoogleLogin}
             className="btn btn-outline btn-accent w-full flex items-center justify-center gap-2"
           >
-            {/* Google SVG */}
+            
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 48 48"
@@ -132,7 +132,7 @@ const Login = () => {
             onClick={handleAppleLogin}
             className="btn btn-outline btn-neutral w-full flex items-center justify-center gap-2"
           >
-            {/* Apple SVG */}
+            
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"

@@ -19,9 +19,9 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "Please provide a password"],
     },
-    role: { type: String, enum: ["user", "admin"], default: "user" }, // Role field
+    role: { type: String, enum: ["user", "admin"], default: "user" }, 
   },
-  { timestamps: true } // Adds createdAt and updatedAt timestamps
+  { timestamps: true } 
 );
 
 // Pre-save hook to hash passwords before saving
