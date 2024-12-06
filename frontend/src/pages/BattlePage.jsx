@@ -186,26 +186,30 @@ const Battle = () => {
       <h2 className="text-2xl font-bold text-primary text-center mb-4">VS</h2>
 
       {pokemon2 && (
-        <motion.div
-          className="card bg-secondary text-neutral p-4 shadow-md rounded w-full mx-auto"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          <img
-            src={pokemon2.sprite}
-            alt={pokemon2.name}
-            className="w-40 h-40 mx-auto"
-          />
-          <h2 className="text-xl font-bold capitalize text-center mt-4">
-            {pokemon2.name}
-          </h2>
-          <p className="text-sm text-center">
-            Total Stats:{" "}
-            {pokemon2.stats.reduce((sum, stat) => sum + stat.base_stat, 0)}
-          </p>
-        </motion.div>
-      )}
+  <div className="flex justify-center items-center mb-6">
+    <motion.div
+      className="card bg-secondary text-neutral p-4 shadow-md rounded w-1/4"
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      <img
+        src={pokemon2.sprite}
+        alt={pokemon2.name}
+        className="w-40 h-40 mx-auto"
+      />
+      <h2 className="text-xl font-bold capitalize text-center mt-4">
+        {pokemon2.name}
+      </h2>
+      <p className="text-sm text-center">
+        Total Stats:{" "}
+        {pokemon2.stats.reduce((sum, stat) => sum + stat.base_stat, 0)}
+      </p>
+    </motion.div>
+  </div>
+)}
+
+
 
       {/* Battle Result */}
       {result && (
