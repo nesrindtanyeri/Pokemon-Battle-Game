@@ -12,7 +12,7 @@ export const getTest = async (req, res) => {
 // Fetch the roster
 export const getRoster = async (req, res) => {
   try {
-    const roster = await Roster.find({ userId: req.user.id });
+    const roster = await Roster.find();
     res.json(roster);
   } catch (error) {
     res.status(500).json({ message: 'Failed to fetch roster.' });
@@ -23,24 +23,31 @@ export const getRoster = async (req, res) => {
 export const addToRoster = async (req, res) => {
   const { id, name, sprite, stats } = req.body;
 
+  // Validate request body
   if (!id || !name || !sprite || !stats) {
     return res.status(400).json({ message: 'Incomplete Pokémon data.' });
   }
 
   try {
+    // Check if the Pokémon already exists in the roster
     const existingPokemon = await Roster.findOne({ id });
     if (existingPokemon) {
       return res.status(400).json({ message: 'Pokémon already exists in the roster.' });
     }
 
-    const newPokemon = new Roster({ userId: req.user.id, id, name, sprite, stats });
+    // Create a new Pokémon document
+    const newPokemon = new Roster({ id, name, sprite, stats });
     const savedPokemon = await newPokemon.save();
+
+    // Respond with success
     res.status(201).json({ message: 'Pokémon added to roster.', pokemon: savedPokemon });
   } catch (error) {
-    res.status(500).json({ message: 'Failed to add Pokémon to roster.' });
-    res.status(201).json({ message: 'Pokémon added to roster.', pokemon: savedPokemon });
+    // Handle server error
+    console.error('Error adding Pokémon to roster:', error);
+    res.status(500).json({ message: 'Failed to add Pokémon to roster.', error: error.message });
   }
 };
+
 
 // Remove a Pokémon from the roster
 export const removeFromRoster = async (req, res) => {
