@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const PokemonDetails = () => {
   const { id } = useParams();
@@ -15,8 +17,10 @@ const PokemonDetails = () => {
           `https://pokeapi.co/api/v2/pokemon/${id}`
         );
         setPokemon(response.data);
+        toast.success("Pokémon details loaded successfully!");
       } catch (err) {
         setError("Failed to fetch Pokémon details");
+        toast.error("Failed to fetch Pokémon details.");
       }
     };
 
@@ -28,41 +32,50 @@ const PokemonDetails = () => {
       if (!pokemon || !pokemon.sprites || !pokemon.stats) {
         throw new Error("Incomplete Pokémon data.");
       }
-  
+
       const formattedStats = pokemon.stats.map((stat) => ({
         name: stat.stat.name, // e.g., "hp", "attack", etc.
         base_stat: stat.base_stat, // e.g., 45, 60, etc.
       }));
-  
+
       await axios.post("http://localhost:3000/roster", {
         id: pokemon.id,
         name: pokemon.name,
-        sprite: pokemon.sprites.other?.["official-artwork"]?.front_default || pokemon.sprites.front_default,
+        sprite:
+          pokemon.sprites.other?.["official-artwork"]?.front_default ||
+          pokemon.sprites.front_default,
         stats: formattedStats,
       });
-  
+
       alert(`${pokemon.name} has been added to your roster!`);
+      toast.success(`${pokemon.name} has been added to your roster!`);
     } catch (err) {
-      console.error("Error adding Pokémon to roster:", err.response?.data || err.message);
+      console.error(
+        "Error adding Pokémon to roster:",
+        err.response?.data || err.message
+      );
       alert("Failed to add Pokémon to roster.");
+      toast.error("Failed to add Pokémon to roster.");
     }
   };
-  
 
   // Navigate to a specific Pokémon ID
   const navigateToPokemon = (newId) => {
-    if (newId >= 1 && newId <= 898) { // Valid Pokémon ID range
+    if (newId >= 1 && newId <= 898) {
+      // Valid Pokémon ID range
       navigate(`/pokemon/${newId}`);
     }
   };
 
   if (error) return <p className="text-error text-center mt-10">{error}</p>;
-  if (!pokemon) return <p className="text-primary text-center mt-10">Loading...</p>;
+  if (!pokemon)
+    return <p className="text-primary text-center mt-10">Loading...</p>;
 
   return (
     <div className="min-h-screen bg-base-100 flex flex-col justify-center items-center py-10 border border-black border-b">
-      <div className="container mx-auto max-w-4xl p-6 bg-secondary rounded-lg shadow-md border border-black border-200">
-        <h1 className="text-4xl text-white font-bold text-center capitalize text-primary mb-6">
+      <ToastContainer />
+      <div className="container mx-auto max-w-4xl p-6 bg-base-100 rounded-lg shadow-md border border-black border-200">
+        <h1 className="text-4xl font-bold text-center capitalize text-primary mb-6">
           {pokemon.name}
         </h1>
 
@@ -158,5 +171,3 @@ const PokemonDetails = () => {
 };
 
 export default PokemonDetails;
-
-

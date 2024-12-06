@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Leaderboard = () => {
   const [leaderboard, setLeaderboard] = useState([]);
@@ -16,6 +18,7 @@ const Leaderboard = () => {
         setLeaderboard(response.data);
       } catch (err) {
         console.error("Error fetching leaderboard:", err);
+        toast.error("Failed to load leaderboard.");
         setError("Failed to load leaderboard.");
       }
     };
@@ -31,6 +34,7 @@ const Leaderboard = () => {
 
     if (!username.trim() || !score || isNaN(score) || score < 0) {
       setError("Please enter a valid name and a positive score.");
+      toast.error("Please enter a valid name and a positive score.");
       return;
     }
 
@@ -40,6 +44,7 @@ const Leaderboard = () => {
         score: parseInt(score),
       });
       setSuccess("Score successfully submitted!");
+      toast.success("Score successfully submitted!");
       setUsername("");
       setScore("");
 
@@ -49,11 +54,13 @@ const Leaderboard = () => {
     } catch (err) {
       console.error("Error submitting score:", err);
       setError("Failed to submit score. Please try again.");
+      toast.error("Failed to submit score. Please try again.");
     }
   };
 
   return (
     <div className="container mx-auto p-4">
+      <ToastContainer />
       <h1 className="text-3xl font-bold text-center text-primary mb-6">
         Leaderboard
       </h1>
