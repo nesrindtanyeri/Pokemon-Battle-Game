@@ -56,6 +56,10 @@ const PokemonDetails = () => {
     }
   };
 
+  const navigateToRoster = () => {
+    navigate("/roster");
+  };  
+
   if (error) return <p className="text-error text-center mt-10">{error}</p>;
   if (!pokemon) return <p className="text-primary text-center mt-10">Loading...</p>;
 
@@ -143,6 +147,13 @@ const PokemonDetails = () => {
             className="px-4 py-2 bg-gray-200 text-gray-800 font-bold rounded hover:bg-gray-300 disabled:opacity-50"
           >
             Previous
+          </button>
+          <button
+            onClick={() => navigateToRoster()}
+            disabled={parseInt(id) >= 898} 
+            className="px-4 py-2 bg-gray-200 text-gray-800 font-bold rounded hover:bg-gray-300 disabled:opacity-50"
+          > 
+            Go to Roster
           </button>
           <button
             onClick={() => navigateToPokemon(parseInt(id) + 1)}

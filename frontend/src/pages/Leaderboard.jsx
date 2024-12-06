@@ -15,11 +15,11 @@ const Leaderboard = () => {
         const response = await axios.get("http://localhost:3000/leaderboard");
         setLeaderboard(response.data);
       } catch (err) {
-        console.error("Error fetching leaderboard:", err);
+        console.error("Error fetching leaderboard:", err.response || err);
         setError("Failed to load leaderboard.");
       }
     };
-
+  
     fetchLeaderboard();
   }, []);
 
@@ -53,8 +53,9 @@ const Leaderboard = () => {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold text-center text-primary mb-6">
+    <div className="flex flex-col min-h-screen">
+    <div className="container mx-auto p-4 min-h-screen">
+      <h1 className="flex justify-text-3xl font-bold text-center text-primary mb-6">
         Leaderboard
       </h1>
       <table className="table-auto w-full border-collapse border border-gray-300 mb-6">
@@ -111,6 +112,7 @@ const Leaderboard = () => {
   </button>
 </form>
 
+    </div>
     </div>
   );
 };

@@ -1,10 +1,14 @@
 import { useState, useEffect } from 'react';
+import {useNavigate} from 'react-router-dom';
 import axios from 'axios';
 
+
 const MyRoster = () => {
+  const navigate = useNavigate();
   const [roster, setRoster] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
 
   useEffect(() => {
     const fetchRoster = async () => {
@@ -37,6 +41,10 @@ const MyRoster = () => {
     );
   }
 
+  const navigateToBattle = () => {
+    navigate('/battle');
+  }
+
   // Delete handler function with pokemon passed as an argument
   const handleClick = async (pokemonId) => {
     try {
@@ -64,7 +72,16 @@ const MyRoster = () => {
             </li>
           ))}
         </ul>
+        
       )}
+      <div className="flex justify-center mt-6">
+        <button
+            onClick={navigateToBattle}
+            className="px-8 py-3 bg-gray-800 text-200 text-white font-bold rounded-lg shadow hover:bg-accent-focus transition-transform transform hover:scale-105"
+          >
+            Battle!
+          </button>
+      </div>
     </div>
   );
 };

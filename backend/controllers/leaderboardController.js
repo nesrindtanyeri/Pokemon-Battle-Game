@@ -5,10 +5,11 @@ import Leaderboard from '../models/leaderboardModel.js';
 export const getLeaderboard = async (req, res) => {
   try {
     const leaderboard = await Leaderboard.find()
-    .populate("userId", "username") // Populate username from User model
-    .sort({ score: -1, date: 1 });
+      .populate("userId", "username") // Ensure this is correct for your schema
+      .sort({ score: -1, date: 1 });
     res.json(leaderboard);
   } catch (error) {
+    console.error("Error fetching leaderboard:", error);
     res.status(500).json({ message: 'Failed to fetch leaderboard.' });
   }
 };
