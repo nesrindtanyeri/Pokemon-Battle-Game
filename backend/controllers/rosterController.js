@@ -56,7 +56,6 @@ export const removeFromRoster = async (req, res) => {
   try {
     const deletedPokemon = await Roster.findOneAndDelete({
       id,
-      userId: req.user.id,
     });
     if (!deletedPokemon) {
       return res

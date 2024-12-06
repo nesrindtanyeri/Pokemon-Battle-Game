@@ -42,14 +42,18 @@ const MyRoster = () => {
   }
 
   // Delete handler function with pokemon passed as an argument
-  const handleClick = async (pokemonId) => {
+  const handleClick = async (id) => { 
     try {
-      await axios.delete(`http://localhost:3000/roster/${pokemonId}`);
-      setRoster(roster.filter((p) => p.id !== pokemonId));
+      await axios.delete(`http://localhost:3000/roster/${id}`);
+      setRoster((prev) => prev.filter((pokemon) => pokemon.id !== id)); 
+      toast.success("Pokémon removed from roster.");
+      console.log(`Pokémon with ID ${id} removed from roster.`);
     } catch (err) {
-      console.error(err);
+      console.error("Failed to remove Pokémon from roster:", err.message);
+      toast.error("Failed to remove Pokémon from roster.");
     }
   };
+  
 
   return (
     <div className="container mx-auto p-4 min-h-screen">
@@ -80,3 +84,4 @@ const MyRoster = () => {
 };
 
 export default MyRoster;
+
