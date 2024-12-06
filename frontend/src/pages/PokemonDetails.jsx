@@ -77,7 +77,7 @@ const PokemonDetails = () => {
     <div className="min-h-screen bg-base-100 flex flex-col justify-center items-center py-10 border border-black border-b">
       <ToastContainer />
       <div className="container mx-auto max-w-4xl p-6 bg-secondary rounded-lg shadow-md border border-black border-200">
-        <h1 className="text-4xl font-bold text-center capitalize text-primary mb-6">
+        <h1 className="text-white text-4xl font-bold text-center capitalize text-primary mb-6">
           {pokemon.name}
         </h1>
 
