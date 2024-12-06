@@ -74,7 +74,7 @@ const PokemonDetails = () => {
   return (
     <div className="min-h-screen bg-base-100 flex flex-col justify-center items-center py-10 border border-black border-b">
       <ToastContainer />
-      <div className="container mx-auto max-w-4xl p-6 bg-base-100 rounded-lg shadow-md border border-black border-200">
+      <div className="container mx-auto max-w-4xl p-6 bg-secondary rounded-lg shadow-md border border-black border-200">
         <h1 className="text-4xl font-bold text-center capitalize text-primary mb-6">
           {pokemon.name}
         </h1>
@@ -145,6 +145,18 @@ const PokemonDetails = () => {
             className="px-8 py-3 bg-gray-200 text-black font-bold rounded-lg shadow hover:bg-accent-focus transition-transform transform hover:scale-105"
           >
             Add to Roster
+          </button>
+          
+        </div>
+
+<div className="text-center mt-6">
+        <button
+            onClick={() => {
+              navigate(`/roster`);
+            }}
+            className="px-8 py-3 bg-gray-200 text-black font-bold rounded-lg shadow hover:bg-accent-focus transition-transform transform hover:scale-105"
+          >
+            Go to Roster
           </button>
         </div>
 
