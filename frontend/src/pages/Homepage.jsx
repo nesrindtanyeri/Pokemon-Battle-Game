@@ -32,7 +32,7 @@ const Homepage = () => {
       setError("Failed to load Pokémon. Please try again later.");
       toast.error("Failed to load Pokémon. Please try again.");
     } finally {
-      setLoading(false); // Ensure loading is set to false
+      setLoading(false); 
     }
   };
 
@@ -64,7 +64,7 @@ const Homepage = () => {
   return (
     <div className="container mx-auto p-4">
       <ToastContainer />
-      {/* Hero Section */}
+ 
       <div className="relative bg-black rounded-lg overflow-hidden mb-8">
         <iframe
           className="w-full h-64 sm:h-96 md:h-[500px] mx-auto"
@@ -77,7 +77,7 @@ const Homepage = () => {
         <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center"></div>
       </div>
 
-      {/* Pokémon List */}
+
       <h1 className="text-3xl font-bold text-center text-primary mb-6">
         Pokémon List
       </h1>

@@ -11,8 +11,8 @@ const rosterSchema = new mongoose.Schema({
     }
   ]
 }, {
-  toJSON: { virtuals: true }, // Ensures that virtuals are included when converting to JSON
-  toObject: { virtuals: true } // Ensures that virtuals are included when converting to objects
+  toJSON: { virtuals: true }, 
+  toObject: { virtuals: true } 
 });
 
 const Roster = mongoose.model('Roster', rosterSchema);

@@ -26,7 +26,7 @@ const leaderboardSchema = new mongoose.Schema({
   },
 });
 
-// Add an index for optimized queries
+
 leaderboardSchema.index({ score: -1, date: 1 });
 
 export default mongoose.model("Leaderboard", leaderboardSchema);
