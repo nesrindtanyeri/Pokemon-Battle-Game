@@ -67,7 +67,7 @@ const Battle = () => {
     try {
       await axios.post("http://localhost:3000/roster", pokemon);
       console.log(`${pokemon.name} added to roster!`);
-      toast.success(`${pokemon.name} added to roster!`);
+      toast.success(`You win! ${pokemon.name} added to roster!`);
     } catch (err) {
       console.error("Failed to add Pokémon to roster:", err.message);
       toast.error("Failed to add Pokémon to roster.");
@@ -79,7 +79,7 @@ const Battle = () => {
     try {
       await axios.delete(`http://localhost:3000/roster/${id}`);
       console.log(`Pokémon with ID ${id} removed from roster.`);
-      toast.info("Pokémon removed from roster.");
+      toast.info("You Lost! Pokémon removed from roster.");
     } catch (err) {
       console.error("Failed to remove Pokémon from roster:", err.message);
       toast.error("Failed to remove Pokémon from roster.");
@@ -118,8 +118,7 @@ const Battle = () => {
     try {
       if (userPokemonStats > opponentPokemonStats) {
         setResult(`${selectedPokemon.name} wins! You win ${pokemon2.name}.`);
-        alert(`You win! ${pokemon2.name} has been added to your roster.`);
-        setScore((prev) => ({
+              setScore((prev) => ({
           ...prev,
           wins: prev.wins + 1,
           xp: prev.xp + 10,
@@ -130,8 +129,7 @@ const Battle = () => {
   
       } else if (opponentPokemonStats > userPokemonStats) {
         setResult(`${pokemon2.name} wins! You lose ${selectedPokemon.name}.`);
-        alert(`You lose! ${selectedPokemon.name} has been removed from your roster.`);
-        setScore((prev) => ({
+               setScore((prev) => ({
           ...prev,
           losses: prev.losses + 1,
         }));

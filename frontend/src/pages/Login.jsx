@@ -15,30 +15,28 @@ const Login = () => {
       });
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("username", username); // Store username for later use
-      alert("Login successful!");
-      toast.success("Login successful!");
+            toast.success("Login successful!");
     } catch (error) {
       console.error(
         "Error during login:",
         error.response?.data || error.message
       );
-      alert("Login failed!");
-      toast.error("Login failed! Please check your credentials.");
+           toast.error("Login failed! Please check your credentials.");
     }
   };
 
   const handleGoogleLogin = () => {
-    alert("Google Login Clicked!");
+    toast.info("Google Login Clicked!");
     
   };
 
   const handleAppleLogin = () => {
-    alert("Apple Login Clicked!");
+    toast.info("Apple Login Clicked!");
     
   };
 
   const handleSignup = () => {
-    alert("Signup with Email Clicked!");
+    toast.info("Signup with Email Clicked!");
     
   };
 

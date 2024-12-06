@@ -47,8 +47,7 @@ const PokemonDetails = () => {
         stats: formattedStats,
       });
 
-      alert(`${pokemon.name} has been added to your roster!`);
-      toast.success(`${pokemon.name} has been added to your roster!`);
+            toast.success(`${pokemon.name} has been added to your roster!`);
     } catch (err) {
       console.error(
         "Error adding Pokémon to roster:",
