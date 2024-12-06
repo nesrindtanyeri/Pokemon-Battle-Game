@@ -5,8 +5,8 @@ import authMiddleware from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
-// Fetch leaderboard
-router.get("/",authMiddleware, getLeaderboard); async (req, res) => {
+// GET /leaderboard: Fetch the leaderboard (no auth required)
+router.get("/", getLeaderboard); async (req, res) => {
   try {
     const leaderboard = await Leaderboard.find().sort({ score: -1, date: 1 });
     res.json(leaderboard.map((entry) => ({ ...entry._doc, id: entry._id })));
@@ -16,7 +16,7 @@ router.get("/",authMiddleware, getLeaderboard); async (req, res) => {
 };
 
 // Add new score
-router.post("/", authMiddleware, addOrUpdateLeaderboardEntry); async (req, res) => {
+router.post("/", /* authMiddleware, */ addScore); async (req, res) => {
   const { username, score } = req.body;
 
   if (!username || !score || isNaN(score) || score < 0) {

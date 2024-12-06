@@ -1,5 +1,6 @@
 import express from 'express';
 import { getTest, getRoster, addToRoster, removeFromRoster } from '../controllers/rosterController.js';
+import authMiddleware from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
@@ -7,13 +8,13 @@ const router = express.Router();
 router.get('/test', getTest);
 
 // Get Roster: GET /roster
-router.get('/', getRoster);
+router.get('/', /* authMiddleware, */ getRoster);
 
 // Add to Roster: POST /roster
-router.post('/', addToRoster);
+router.post('/', /* authMiddleware, */ addToRoster);
 
 // Remove from Roster: DELETE /roster/:id
-router.delete('/:id', removeFromRoster);
+router.delete('/:id', /* authMiddleware, */removeFromRoster);
 
 export default router;
 
