@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Link } from "react-router-dom";
 
 const MyRoster = () => {
   const [roster, setRoster] = useState([]);
@@ -53,7 +54,12 @@ const MyRoster = () => {
   return (
     <div className="container mx-auto p-4 min-h-screen">
       <ToastContainer />
-      <h1 className="text-3xl font-bold text-center text-primary mb-6">My Roster</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold text-primary">My Roster</h1>
+        <Link to="/battle" className="btn btn-accent">
+          Battle Now
+        </Link>
+      </div>
       {roster.length === 0 ? (
         <div className="text-center text-gray-500">
           <p>Your roster is empty. Add some Pokémon!</p>
